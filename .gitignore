@@ -1,0 +1,12 @@
+﻿################################################################################
+# Este archivo .gitignore ha sido creado automáticamente por Microsoft(R) Visual Studio.
+################################################################################
+
+/Multiplex/.vs
+/Multiplex/bin/Debug/netcoreapp3.1
+/Multiplex/obj
+/Multiplex/wwwroot/Logs
+/Multiplex.Business/bin/Debug/netcoreapp3.1
+/Multiplex.Business/obj
+/Multiplex.Domain/bin/Debug/netcoreapp3.1
+/Multiplex.Domain/obj
