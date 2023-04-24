@@ -7,12 +7,12 @@ using System.Collections.Generic;
 
 namespace Multiplex.Domain.Models
 {
-    public partial class Relation88
+    public partial class GenerosSeries
     {
         public int IdGn { get; set; }
-        public int IdPl { get; set; }
+        public int IdSr { get; set; }
 
         public virtual Generos IdGnNavigation { get; set; }
-        public virtual Peliculas IdPlNavigation { get; set; }
+        public virtual Series IdSrNavigation { get; set; }
     }
 }

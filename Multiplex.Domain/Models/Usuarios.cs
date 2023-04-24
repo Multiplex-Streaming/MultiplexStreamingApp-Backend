@@ -13,8 +13,8 @@ namespace Multiplex.Domain.Models
         {
             FavoritosPelicula = new HashSet<FavoritosPelicula>();
             FavoritosSeries = new HashSet<FavoritosSeries>();
-            HistorialPelicula = new HashSet<HistorialPelicula>();
-            HistorialSerie = new HashSet<HistorialSerie>();
+            HistorialPeliculas = new HashSet<HistorialPeliculas>();
+            HistorialSeries = new HashSet<HistorialSeries>();
         }
 
         public int IdUsr { get; set; }
@@ -24,12 +24,15 @@ namespace Multiplex.Domain.Models
         public string ApellidoUsr { get; set; }
         public string CorreoUsr { get; set; }
         public string PasswordUsr { get; set; }
+        public DateTime FechaAltaUsr { get; set; }
+        public DateTime FechaModificacionUsr { get; set; }
+        public decimal VerificacionUsr { get; set; }
 
         public virtual EstadosCuentas IdEcNavigation { get; set; }
         public virtual TiposCuentas IdTcNavigation { get; set; }
         public virtual ICollection<FavoritosPelicula> FavoritosPelicula { get; set; }
         public virtual ICollection<FavoritosSeries> FavoritosSeries { get; set; }
-        public virtual ICollection<HistorialPelicula> HistorialPelicula { get; set; }
-        public virtual ICollection<HistorialSerie> HistorialSerie { get; set; }
+        public virtual ICollection<HistorialPeliculas> HistorialPeliculas { get; set; }
+        public virtual ICollection<HistorialSeries> HistorialSeries { get; set; }
     }
 }

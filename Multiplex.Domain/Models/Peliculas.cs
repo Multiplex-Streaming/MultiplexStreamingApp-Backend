@@ -12,8 +12,8 @@ namespace Multiplex.Domain.Models
         public Peliculas()
         {
             FavoritosPelicula = new HashSet<FavoritosPelicula>();
-            HistorialPelicula = new HashSet<HistorialPelicula>();
-            Relation88 = new HashSet<Relation88>();
+            GenerosPeliculas = new HashSet<GenerosPeliculas>();
+            HistorialPeliculas = new HashSet<HistorialPeliculas>();
         }
 
         public int IdPl { get; set; }
@@ -21,9 +21,10 @@ namespace Multiplex.Domain.Models
         public string DescripcionPl { get; set; }
         public string DuracionPl { get; set; }
         public string ElencoPl { get; set; }
+        public string UrlPl { get; set; }
 
         public virtual ICollection<FavoritosPelicula> FavoritosPelicula { get; set; }
-        public virtual ICollection<HistorialPelicula> HistorialPelicula { get; set; }
-        public virtual ICollection<Relation88> Relation88 { get; set; }
+        public virtual ICollection<GenerosPeliculas> GenerosPeliculas { get; set; }
+        public virtual ICollection<HistorialPeliculas> HistorialPeliculas { get; set; }
     }
 }

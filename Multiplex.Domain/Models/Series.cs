@@ -13,8 +13,8 @@ namespace Multiplex.Domain.Models
         {
             CapituloSerie = new HashSet<CapituloSerie>();
             FavoritosSeries = new HashSet<FavoritosSeries>();
-            HistorialSerie = new HashSet<HistorialSerie>();
-            Relation89 = new HashSet<Relation89>();
+            GenerosSeries = new HashSet<GenerosSeries>();
+            HistorialSeries = new HashSet<HistorialSeries>();
         }
 
         public int IdSr { get; set; }
@@ -24,7 +24,7 @@ namespace Multiplex.Domain.Models
 
         public virtual ICollection<CapituloSerie> CapituloSerie { get; set; }
         public virtual ICollection<FavoritosSeries> FavoritosSeries { get; set; }
-        public virtual ICollection<HistorialSerie> HistorialSerie { get; set; }
-        public virtual ICollection<Relation89> Relation89 { get; set; }
+        public virtual ICollection<GenerosSeries> GenerosSeries { get; set; }
+        public virtual ICollection<HistorialSeries> HistorialSeries { get; set; }
     }
 }

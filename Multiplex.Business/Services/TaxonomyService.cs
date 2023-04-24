@@ -22,7 +22,7 @@ namespace Multiplex.Business.Services
         }
 
         public async Task<List<PeliculaDTO>> GetPeliculasPorGenero(int generoId) =>
-            await context.Relation88.Where(x => x.IdGn == generoId).Select(x => new PeliculaDTO
+            await context.GenerosPeliculas.Where(x => x.IdGn == generoId).Select(x => new PeliculaDTO
             {
                 Titulo = x.IdPlNavigation.DescripcionPl
             }).ToListAsync();

@@ -9,7 +9,6 @@ namespace Multiplex.Domain.Models
 {
     public partial class FavoritosPelicula
     {
-        public int IdFavpel { get; set; }
         public int IdPl { get; set; }
         public int IdUsr { get; set; }
 

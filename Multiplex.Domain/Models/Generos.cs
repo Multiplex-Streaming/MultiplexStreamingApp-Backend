@@ -11,14 +11,14 @@ namespace Multiplex.Domain.Models
     {
         public Generos()
         {
-            Relation88 = new HashSet<Relation88>();
-            Relation89 = new HashSet<Relation89>();
+            GenerosPeliculas = new HashSet<GenerosPeliculas>();
+            GenerosSeries = new HashSet<GenerosSeries>();
         }
 
         public int IdGn { get; set; }
         public string DescripcionGn { get; set; }
 
-        public virtual ICollection<Relation88> Relation88 { get; set; }
-        public virtual ICollection<Relation89> Relation89 { get; set; }
+        public virtual ICollection<GenerosPeliculas> GenerosPeliculas { get; set; }
+        public virtual ICollection<GenerosSeries> GenerosSeries { get; set; }
     }
 }

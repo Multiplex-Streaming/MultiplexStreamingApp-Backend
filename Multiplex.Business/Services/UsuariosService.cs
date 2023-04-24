@@ -21,7 +21,8 @@ namespace Multiplex.Business.Services
             this.logger = logger;
         }
 
-        public async Task<List<AbonadosDTO>> GetAbonadosPendientes() => await context.Usuarios.Where(x => x.IdEcNavigation.DescripcionEc.Equals("Pendiente"))
+        public async Task<List<AbonadosDTO>> GetAbonadosPendientes() => await context.Usuarios.Where(x => x.IdEcNavigation.DescripcionEc.Equals("Pendiente")
+        && x.IdTcNavigation.DescripcionTc.Equals("Abonados"))
             .Select(x => new AbonadosDTO() 
             { Name = $"{x.ApellidoUsr} {x.NombreUsr}" })
             .ToListAsync();
