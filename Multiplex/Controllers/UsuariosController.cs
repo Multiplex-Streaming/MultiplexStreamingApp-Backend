@@ -26,5 +26,7 @@ namespace Multiplex.Controllers
         public async Task<IActionResult> GetAbonadosPendientes() => Ok(await usuariosService.GetAbonadosPendientes());
         [HttpPost]
         public async Task<IActionResult> CreateUserAccount(UserAccountDTO userAccount) => Ok(await usuariosService.CreateUserAccount(userAccount));
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDTO changePassword) => Ok(await usuariosService.ChangePassword(changePassword));
     }
 }

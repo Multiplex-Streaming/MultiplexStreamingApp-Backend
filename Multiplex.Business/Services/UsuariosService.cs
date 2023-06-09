@@ -22,6 +22,17 @@ namespace Multiplex.Business.Services
             this.logger = logger;
         }
 
+        public async Task<bool> ChangePassword(ChangePasswordDTO changePasswordInfo)
+        {
+            var user = await context.Usuarios.Where(x => x.CorreoUsr == changePasswordInfo.Correo)
+                .FirstOrDefaultAsync();
+            //TODO: validar que exista el usuario 
+            user.PasswordUsr = changePasswordInfo.NuevaClave;
+            context.Update(user);
+            await context.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<bool> CreateUserAccount(UserAccountDTO userAccount)
         {
             var tipoCuenta = await context.TiposCuentas.Where(x => userAccount.EsAbonado ? x.DescripcionTc == TiposCuentasEnum.ABONADO :
