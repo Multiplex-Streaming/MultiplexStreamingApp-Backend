@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Multiplex.Business.DTOs;
 
 namespace Multiplex.Controllers
 {
@@ -22,9 +23,8 @@ namespace Multiplex.Controllers
             this.usuariosService = usuariosService;
         }
         [HttpGet("pendientes")]
-        public async Task<IActionResult> GetAbonadosPendientes()
-        {
-            return Ok(await usuariosService.GetAbonadosPendientes());
-        }
+        public async Task<IActionResult> GetAbonadosPendientes() => Ok(await usuariosService.GetAbonadosPendientes());
+        [HttpPost]
+        public async Task<IActionResult> CreateUserAccount(UserAccountDTO userAccount) => Ok(await usuariosService.CreateUserAccount(userAccount));
     }
 }
