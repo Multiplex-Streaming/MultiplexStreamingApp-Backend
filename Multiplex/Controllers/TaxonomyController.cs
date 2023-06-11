@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Configuration;
+using Multiplex.Business.DTOs;
 using Multiplex.Business.Interfaces;
 using Multiplex.Business.Services;
 using System.Threading.Tasks;
@@ -14,16 +16,13 @@ namespace Multiplex.Controllers
     public class TaxonomyController : BaseController
     {
         private readonly ITaxonomyService taxonomyService;
-
         public TaxonomyController(IConfiguration configuration, ITaxonomyService taxonomyService) : base(configuration)
         {
             this.taxonomyService = taxonomyService;
         }
-
-        [HttpGet("generos/{id}")]
-        public async Task<IActionResult> GetPeliculasPorGenero([FromRoute]int id)
-        {
-            return Ok(await taxonomyService.GetPeliculasPorGenero(id));
-        }
+        [HttpPost("generos")]
+        public async Task<IActionResult> SaveGenero([FromBody] GeneroDTO genero) => Ok(await taxonomyService.SaveGenero(genero));
+        [HttpGet("generos")]
+        public async Task<IActionResult> GetGeneros() => Ok(await taxonomyService.GetGeneros());
     }
 }

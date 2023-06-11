@@ -123,6 +123,7 @@ namespace Multiplex
         private void InjectServices(IServiceCollection services)
         {
             services.AddTransient<IUsuariosService, UsuariosService>();
+            services.AddTransient<IPeliculasService, PeliculasService>();
             services.AddTransient<ITaxonomyService, TaxonomyService>();
         }
     }

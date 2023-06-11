@@ -71,7 +71,7 @@ namespace Multiplex.Business.Services
         public UserInfoDTO UserExists(string userMail, string userPass) =>
             // AGREGO PARA QUE SOLO PERMITA LOGUEAR A LOS USUARIOS HABILITADOS
             context.Usuarios.Where(x => x.CorreoUsr.Equals(userMail) && x.PasswordUsr.Equals(userPass) &&
-            x.IdTcNavigation.DescripcionTc == EstadosCuentasEnum.HABILITADO)
+            x.IdEcNavigation.DescripcionEc == EstadosCuentasEnum.HABILITADO)
             .Select(x => new UserInfoDTO()
             {
                 Id = x.IdUsr,
