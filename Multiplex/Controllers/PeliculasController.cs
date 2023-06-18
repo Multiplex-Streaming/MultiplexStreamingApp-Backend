@@ -25,7 +25,7 @@ namespace Multiplex.Controllers
         [HttpPost]
         public async Task<IActionResult> SavePelicula([FromBody] PeliculaDTO pelicula) =>
             Ok(await peliculasService.CreatePelicula(pelicula));
-        [HttpGet]
+        [HttpGet("{plId}")]
         public async Task<IActionResult> GetPelicula(int plId) =>
             Ok(await peliculasService.GetPelicula(plId));
         [HttpDelete("{plId}")]
