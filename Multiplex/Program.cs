@@ -53,7 +53,12 @@ namespace Multiplex
                        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
                  config.AddEnvironmentVariables();
              })
+            .ConfigureKestrel((context, options) =>
+            {
+                options.Limits.MaxRequestBodySize = 524288000;
+            })
             .UseSerilog()
             .UseStartup<Startup>();
+
     }
 }

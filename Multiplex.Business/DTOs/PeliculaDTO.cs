@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,5 +14,6 @@ namespace Multiplex.Business.DTOs
         public string Elenco { get; set; }
         public string Url { get; set; }
         public List<GeneroDTO> Generos { get; set; }
+        public IFormFile file { get; set; }
     }
 }
