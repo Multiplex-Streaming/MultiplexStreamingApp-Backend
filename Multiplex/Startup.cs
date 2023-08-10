@@ -90,8 +90,8 @@ namespace Multiplex
             services.AddMvc();
             services.Configure<FormOptions>(x =>
             {
-                x.ValueLengthLimit = 524288000;
-                x.MultipartBodyLengthLimit = 524288000;
+                x.ValueLengthLimit = 1000 * 1048576; 
+                x.MultipartBodyLengthLimit = 1000 * 1048576;
             });
 
         }
@@ -132,6 +132,7 @@ namespace Multiplex
         {
             services.AddTransient<IUsuariosService, UsuariosService>();
             services.AddTransient<IPeliculasService, PeliculasService>();
+            services.AddTransient<ISeriesService, SeriesService>();
             services.AddTransient<ITaxonomyService, TaxonomyService>();
         }
     }

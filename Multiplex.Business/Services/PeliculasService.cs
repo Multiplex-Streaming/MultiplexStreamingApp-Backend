@@ -69,10 +69,19 @@ namespace Multiplex.Business.Services
                 .Include(x => x.FavoritosPelicula)
                 .Where(x => x.IdPl == plId)
                 .FirstOrDefaultAsync();
-            // TODO: validar que exista el registro antes de eliminarlo
+
             if (peliculaDb == null)
                 return false;
 
+            // Delete associated file from PeliculasTemp folder
+            string tempFolderPath = Path.Combine(Path.GetTempPath(), "PeliculasTemp");
+            string tempFilePath = Path.Combine(tempFolderPath, peliculaDb.UrlPl);
+            if (File.Exists(tempFilePath))
+            {
+                File.Delete(tempFilePath);
+            }
+
+            // Remove related entities from context
             if (peliculaDb.HistorialPeliculas.Any())
                 context.RemoveRange(peliculaDb.HistorialPeliculas);
             if (peliculaDb.GenerosPeliculas.Any())
@@ -80,7 +89,9 @@ namespace Multiplex.Business.Services
             if (peliculaDb.FavoritosPelicula.Any())
                 context.RemoveRange(peliculaDb.FavoritosPelicula);
 
+            // Remove the movie entity itself
             context.Remove(peliculaDb);
+
             return await context.SaveChangesAsync() > 0;
         }
 
@@ -120,26 +131,50 @@ namespace Multiplex.Business.Services
                 }).ToList()
             }).ToListAsync();
         }
+
         public async Task<bool> UpdatePelicula(PeliculaDTO pelicula)
         {
             var peliculaDb = await context.Peliculas
                 .Include(x => x.GenerosPeliculas)
                 .Where(x => x.IdPl == pelicula.Id)
                 .FirstOrDefaultAsync();
-            // TODO: validar que exista el registro antes de actualizarlo
+
             if (peliculaDb == null)
             {
                 return false;
             }
 
+            if (pelicula.file != null)
+            {
+                // Delete the previous file from PeliculasTemp folder
+                string tempFolderPath = Path.Combine(Path.GetTempPath(), "PeliculasTemp");
+                string prevTempFilePath = Path.Combine(tempFolderPath, peliculaDb.UrlPl);
+                if (File.Exists(prevTempFilePath))
+                {
+                    File.Delete(prevTempFilePath);
+                }
+
+                // Save the new file to PeliculasTemp folder
+                string tempFileName = Guid.NewGuid().ToString() + Path.GetExtension(pelicula.file.FileName);
+                string tempFilePath = Path.Combine(tempFolderPath, tempFileName);
+                using (var fileStream = new FileStream(tempFilePath, FileMode.Create))
+                {
+                    await pelicula.file.CopyToAsync(fileStream);
+                }
+
+                // Update the URL in the database
+                peliculaDb.UrlPl = tempFileName;
+            }
+
+            // Update other properties
             peliculaDb.TituloPl = pelicula.Titulo;
             peliculaDb.DescripcionPl = pelicula.Descripcion;
             peliculaDb.DuracionPl = pelicula.Duracion;
             peliculaDb.ElencoPl = pelicula.Elenco;
-            peliculaDb.UrlPl = pelicula.Url;
+
+            // Remove and add related genres
             if (peliculaDb.GenerosPeliculas.Any())
                 context.RemoveRange(peliculaDb.GenerosPeliculas);
-
             peliculaDb.GenerosPeliculas = pelicula.Generos.Select(x => new GenerosPeliculas()
             {
                 IdGn = x.Id
@@ -155,21 +190,6 @@ namespace Multiplex.Business.Services
             {
                 Titulo = x.IdPlNavigation.DescripcionPl
             }).ToListAsync();
-
-        //buscar la pelicula de la carpeta temporal y devolverla
-        //public async Task<FileStream> GetPeliculaFile(int plId)
-        //{
-        //    var peliculaDb = await context.Peliculas.Where(x => x.IdPl == plId).FirstOrDefaultAsync();
-        //    if (peliculaDb == null)
-        //        throw new Exception("No se encontró la película");
-
-        //    string tempFolderPath = Path.Combine(Path.GetTempPath(), "PeliculasTemp");
-        //    string tempFilePath = Path.Combine(tempFolderPath, peliculaDb.UrlPl);
-        //    if (!File.Exists(tempFilePath))
-        //        throw new Exception("No se encontró la película");
-
-        //    return new FileStream(tempFilePath, FileMode.Open);
-        //}
 
         public async Task<FileStream> GetPeliculaFile(string url)
         {

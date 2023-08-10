@@ -36,7 +36,7 @@ namespace Multiplex.Controllers
         public async Task<IActionResult> DeletePelicula([FromRoute] int plId) =>
             Ok(await peliculasService.DeletePelicula(plId));
         [HttpPut]
-        public async Task<IActionResult> UpdatePelicula([FromBody] PeliculaDTO pelicula) =>
+        public async Task<IActionResult> UpdatePelicula([FromForm] PeliculaDTO pelicula) =>
             Ok(await peliculasService.UpdatePelicula(pelicula));
 
         [HttpGet("descargar/{url}")]

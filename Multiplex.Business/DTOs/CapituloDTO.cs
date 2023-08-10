@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
-// If you have enabled NRTs for your project, then un-comment the following line:
-// #nullable disable
-
-namespace Multiplex.Domain.Models
+namespace Multiplex.Business.DTOs
 {
-    public partial class CapituloSerie
+    public class CapituloDTO
     {
         public int IdSr { get; set; }
         public int IdCp { get; set; }
@@ -15,6 +14,5 @@ namespace Multiplex.Domain.Models
         public string DescripcionCp { get; set; }
         public string DuracionCp { get; set; }
         public string UrlCp { get; set; }
-        public virtual Series IdSrNavigation { get; set; }
     }
 }

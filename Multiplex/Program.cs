@@ -55,7 +55,7 @@ namespace Multiplex
              })
             .ConfigureKestrel((context, options) =>
             {
-                options.Limits.MaxRequestBodySize = 524288000;
+                options.Limits.MaxRequestBodySize = 1000000000;
             })
             .UseSerilog()
             .UseStartup<Startup>();
