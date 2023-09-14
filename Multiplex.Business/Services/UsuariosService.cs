@@ -62,11 +62,15 @@ namespace Multiplex.Business.Services
             return true;
         }
 
-        public async Task<List<AbonadosDTO>> GetAbonadosPendientes() => await context.Usuarios.Where(x => x.IdEcNavigation.DescripcionEc.Equals("Pendiente")
-        && x.IdTcNavigation.DescripcionTc.Equals("Abonados"))
-            .Select(x => new AbonadosDTO() 
-            { Name = $"{x.ApellidoUsr} {x.NombreUsr}" })
-            .ToListAsync();
+        public async Task<List<AbonadosDTO>> GetAbonadosPendientes() => await context.Usuarios
+        .Where(x => x.IdEcNavigation.DescripcionEc.Equals(EstadosCuentasEnum.PENDIENTE) &&
+                    x.IdTcNavigation.DescripcionTc.Equals(TiposCuentasEnum.ABONADO))
+        .Select(x => new AbonadosDTO
+        {
+            Id = x.IdUsr,
+            Name = $"{x.ApellidoUsr} {x.NombreUsr}"
+        })
+        .ToListAsync();
 
         public UserInfoDTO UserExists(string userMail, string userPass) =>
             // AGREGO PARA QUE SOLO PERMITA LOGUEAR A LOS USUARIOS HABILITADOS
@@ -79,5 +83,20 @@ namespace Multiplex.Business.Services
                 IsAdmin = x.IdTcNavigation.DescripcionTc.Equals("Administrador")
             })
             .FirstOrDefault();
+
+
+        public async Task<bool> UpdateAbonadoStatus(int abonadoId, string nuevoEstado)
+        {
+            var abonado = await context.Usuarios.Where(x => x.IdUsr == abonadoId).FirstOrDefaultAsync();
+            if (abonado == null)
+                return false;
+            var estadoCuenta = await context.EstadosCuentas.Where(x => x.DescripcionEc == nuevoEstado).FirstOrDefaultAsync();
+            if (estadoCuenta == null)
+                return false;
+            abonado.IdEc = estadoCuenta.IdEc;
+            context.Update(abonado);
+            await context.SaveChangesAsync();
+            return true;
+        }
     }
 }
