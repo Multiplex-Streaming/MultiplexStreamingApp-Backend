@@ -10,5 +10,8 @@ namespace Multiplex.Business.Interfaces
     {
         Task<List<GeneroDTO>> GetGeneros();
         Task<bool> SaveGenero(GeneroDTO genero);
+
+        //Retornar Capitulos
+        Task<List<CapituloDTO>> GetCapitulos();
     }
 }

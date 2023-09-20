@@ -39,9 +39,10 @@ namespace Multiplex.Business.Services
                 Nombre = serieEntity.NombreSr,
                 Descripcion = serieEntity.DescripcionSr,
                 CantidadCapitulos = serieEntity.CantCapitulosSr,
+                Url = serieEntity.UrlSr,
                 Capitulos = serieEntity.CapituloSerie.Select(capituloEntity => new CapituloDTO
                 {
-                    IdSr = capituloEntity.IdCp,
+                    IdSr = capituloEntity.IdSr,
                     IdCp = capituloEntity.IdCp,
                     NombreCp = capituloEntity.NombreCp,
                     DescripcionCp = capituloEntity.DescripcionCp,
@@ -72,7 +73,7 @@ namespace Multiplex.Business.Services
                 CantidadCapitulos = serieEntity.CantCapitulosSr,
                 Capitulos = serieEntity.CapituloSerie.Select(capituloEntity => new CapituloDTO
                 {
-                    IdSr = capituloEntity.IdCp,
+                    IdSr = capituloEntity.IdSr,
                     IdCp = capituloEntity.IdCp,
                     NombreCp = capituloEntity.NombreCp,
                     DescripcionCp = capituloEntity.DescripcionCp,

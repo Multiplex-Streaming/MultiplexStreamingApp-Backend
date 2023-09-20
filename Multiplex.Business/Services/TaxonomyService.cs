@@ -35,5 +35,18 @@ namespace Multiplex.Business.Services
             });
             return await context.SaveChangesAsync() > 0;
         }
+
+        public async Task<List<CapituloDTO>> GetCapitulos()
+        {
+            return await context.CapituloSerie.Select(x => new CapituloDTO()
+            {
+                IdSr = x.IdSr,
+                IdCp = x.IdCp,
+                NombreCp = x.NombreCp,
+                DescripcionCp = x.DescripcionCp,
+                DuracionCp = x.DuracionCp,
+                UrlCp = x.UrlCp,
+            }).ToListAsync();
+        }
     }
 }

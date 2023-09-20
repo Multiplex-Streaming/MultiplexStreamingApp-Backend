@@ -24,5 +24,9 @@ namespace Multiplex.Controllers
         public async Task<IActionResult> SaveGenero([FromBody] GeneroDTO genero) => Ok(await taxonomyService.SaveGenero(genero));
         [HttpGet("generos")]
         public async Task<IActionResult> GetGeneros() => Ok(await taxonomyService.GetGeneros());
+
+        //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        [HttpGet("capitulos")]
+        public async Task<IActionResult> GetCapitulos() => Ok(await taxonomyService.GetCapitulos());
     }
 }

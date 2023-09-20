@@ -54,7 +54,7 @@ namespace Multiplex.Business.Services
                 NombreUsr = userAccount.Nombre,
                 CorreoUsr = userAccount.Correo,
                 PasswordUsr = userAccount.Clave,
-                FechaAltaUsr = DateTime.Now,
+                //FechaAltaUsr = DateTime.Now,
                 IdTc = tipoCuenta.IdTc,
                 IdEc = estadoCuenta.IdEc
             });
