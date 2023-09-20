@@ -15,6 +15,8 @@ namespace Multiplex.Domain.Models
         public string DescripcionCp { get; set; }
         public string DuracionCp { get; set; }
         public string UrlCp { get; set; }
+        public string PortadaCp { get; set; }
+
         public virtual Series IdSrNavigation { get; set; }
     }
 }

@@ -22,6 +22,7 @@ namespace Multiplex.Domain.Models
         public string DuracionPl { get; set; }
         public string ElencoPl { get; set; }
         public string UrlPl { get; set; }
+        public string PortadaPl { get; set; }
 
         public virtual ICollection<FavoritosPelicula> FavoritosPelicula { get; set; }
         public virtual ICollection<GenerosPeliculas> GenerosPeliculas { get; set; }
