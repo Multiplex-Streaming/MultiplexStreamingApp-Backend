@@ -16,5 +16,6 @@ namespace Multiplex.Business.DTOs
         public string? Url { get; set; }
         public List<CapituloDTO> Capitulos { get; set; }
         public List<IFormFile> files { get; set; }
+        public string Portada { get; set; }
     }
 }

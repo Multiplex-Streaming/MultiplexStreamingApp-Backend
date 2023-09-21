@@ -13,7 +13,9 @@ namespace Multiplex.Business.DTOs
         public string Duracion { get; set; }
         public string Elenco { get; set; }
         public string Url { get; set; }
+        public string Portada { get; set; }
         public List<GeneroDTO> Generos { get; set; }
         public IFormFile file { get; set; }
+        public IFormFile portadaFile { get; set; }
     }
 }

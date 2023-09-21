@@ -40,6 +40,7 @@ namespace Multiplex.Business.Services
                 Descripcion = serieEntity.DescripcionSr,
                 CantidadCapitulos = serieEntity.CantCapitulosSr,
                 Url = serieEntity.UrlSr,
+                Portada = serieEntity.PortadaSr,
                 Capitulos = serieEntity.CapituloSerie.Select(capituloEntity => new CapituloDTO
                 {
                     IdSr = capituloEntity.IdSr,
@@ -71,6 +72,8 @@ namespace Multiplex.Business.Services
                 Nombre = serieEntity.NombreSr,
                 Descripcion = serieEntity.DescripcionSr,
                 CantidadCapitulos = serieEntity.CantCapitulosSr,
+                Url = serieEntity.UrlSr,
+                Portada = serieEntity.PortadaSr,
                 Capitulos = serieEntity.CapituloSerie.Select(capituloEntity => new CapituloDTO
                 {
                     IdSr = capituloEntity.IdSr,
@@ -78,7 +81,8 @@ namespace Multiplex.Business.Services
                     NombreCp = capituloEntity.NombreCp,
                     DescripcionCp = capituloEntity.DescripcionCp,
                     DuracionCp = capituloEntity.DuracionCp,
-                    UrlCp = capituloEntity.UrlCp
+                    UrlCp = capituloEntity.UrlCp,
+                    Portada = capituloEntity.PortadaCp
                 }).ToList(),
             };
 
@@ -125,6 +129,8 @@ namespace Multiplex.Business.Services
                 NombreSr = serie.Nombre,
                 DescripcionSr = serie.Descripcion,
                 CantCapitulosSr = serie.CantidadCapitulos,
+                PortadaSr = serie.Portada,
+                UrlSr = serie.Url,
             };
 
             context.Series.Add(serieEntity);
@@ -211,7 +217,8 @@ namespace Multiplex.Business.Services
             serieEntity.NombreSr = serie.Nombre;
             serieEntity.DescripcionSr = serie.Descripcion;
             serieEntity.CantCapitulosSr = serie.CantidadCapitulos;
-
+            serieEntity.UrlSr = serie.Url;
+            serieEntity.PortadaSr = serie.Portada;
             // Update capítulos
             for (int i = 0; i < serie.Capitulos.Count; i++)
             {

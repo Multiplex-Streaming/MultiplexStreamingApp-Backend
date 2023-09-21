@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,5 +15,6 @@ namespace Multiplex.Business.DTOs
         public string DescripcionCp { get; set; }
         public string DuracionCp { get; set; }
         public string UrlCp { get; set; }
+        public string Portada { get; set; }
     }
 }
