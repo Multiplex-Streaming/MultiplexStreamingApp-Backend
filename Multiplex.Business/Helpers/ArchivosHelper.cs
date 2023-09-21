@@ -13,13 +13,13 @@ namespace Multiplex.Business.Helpers
 {
     public static class ArchivosHelper
     {
-        public static async Task<bool> BorrarArchivo(string url)
+        public static async Task<bool> BorrarArchivo(string fileName, string path)
         {
-            if(string.IsNullOrEmpty(url)) return false;
+            if(string.IsNullOrEmpty(fileName)) return false;
             try
             {
-                var tempFolderPath = Path.Combine(Path.GetTempPath(), "PeliculasTemp");
-                var prevTempFilePath = Path.Combine(tempFolderPath, url);
+                var tempFolderPath = Path.Combine(Path.GetTempPath(), path);
+                var prevTempFilePath = Path.Combine(tempFolderPath, fileName);
                 if (File.Exists(prevTempFilePath))
                     File.Delete(prevTempFilePath);
 
@@ -30,13 +30,13 @@ namespace Multiplex.Business.Helpers
                 return false;
             }
         }
-        public static async Task<string> GuardarArchivo(IFormFile file)
+        public static async Task<string> GuardarArchivo(IFormFile file, string path)
         {
-            if (file != null) return ErrorMessages.NoGraboArchivo;
+            if (file == null) return ErrorMessages.NoGraboArchivo;
 
             try
             {
-                var tempFolderPath = Path.Combine(Path.GetTempPath(), "PeliculasTemp");
+                var tempFolderPath = Path.Combine(Path.GetTempPath(), path);
                 if (!Directory.Exists(tempFolderPath))
                     Directory.CreateDirectory(tempFolderPath);
 

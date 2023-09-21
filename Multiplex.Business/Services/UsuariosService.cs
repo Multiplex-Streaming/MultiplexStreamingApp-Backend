@@ -68,7 +68,10 @@ namespace Multiplex.Business.Services
         .Select(x => new AbonadosDTO
         {
             Id = x.IdUsr,
-            Name = $"{x.ApellidoUsr} {x.NombreUsr}"
+            Name = $"{x.ApellidoUsr} {x.NombreUsr}",
+            Estado = x.IdEcNavigation.DescripcionEc,
+            FecAlta = x.FechaAltaUsr,
+            Email = x.CorreoUsr
         })
         .ToListAsync();
 

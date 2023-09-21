@@ -20,6 +20,7 @@ namespace Multiplex.Business.Services
         private readonly MultiplexContext context;
         private readonly ILogger logger;
         private readonly IConfiguration _configuration;
+        private string _peliculasTemp = "PeliculasTemp";
         public PeliculasService(MultiplexContext context, ILogger<UsuariosService> logger, IConfiguration configuration)
         {
             this.context = context;
@@ -30,11 +31,18 @@ namespace Multiplex.Business.Services
         {
             long maxAllowedContentLength = _configuration.GetValue<long>("RequestLimits:MaxAllowedContentLength");
 
-            if (pelicula.file.Length > maxAllowedContentLength)
+            if (pelicula.file?.Length > maxAllowedContentLength)
                 throw new Exception("El tamaño del archivo supera el límite permitido");
 
-            var tempFileName = await ArchivosHelper.GuardarArchivo(pelicula.file);
-            var tempPortadaFileName = await ArchivosHelper.GuardarArchivo(pelicula.portadaFile);
+            if (pelicula.portadaFile?.Length > maxAllowedContentLength)
+                throw new Exception("El tamaño del archivo supera el límite permitido");
+
+            string tempFileName = "", tempPortadaFileName = "";
+
+            if (pelicula.file != null)
+                tempFileName = await ArchivosHelper.GuardarArchivo(pelicula.file, _peliculasTemp);
+            if (pelicula.portadaFile != null)
+                tempPortadaFileName = await ArchivosHelper.GuardarArchivo(pelicula.portadaFile, _peliculasTemp);
 
             context.Add(new Peliculas()
             {
@@ -45,9 +53,9 @@ namespace Multiplex.Business.Services
                 TituloPl = pelicula.Titulo,
                 UrlPl = tempFileName,
                 PortadaPl = tempPortadaFileName,
-                GenerosPeliculas = pelicula.Generos.Select(x => new GenerosPeliculas()
+                GenerosPeliculas = pelicula.GenerosList.Select(x => new GenerosPeliculas()
                 {
-                    IdGn = x.Id
+                    IdGn = x
                 }).ToHashSet()
             });
             return await context.SaveChangesAsync() > 0;
@@ -116,7 +124,6 @@ namespace Multiplex.Business.Services
                 Descripcion = x.DescripcionPl,
                 Duracion = x.DuracionPl,
                 Elenco = x.ElencoPl,
-                Portada = x.PortadaPl,
                 Generos = x.GenerosPeliculas.Select(g => new GeneroDTO()
                 {
                     Descripcion = g.IdGnNavigation.DescripcionGn,
@@ -137,14 +144,14 @@ namespace Multiplex.Business.Services
 
             if (pelicula.file != null)
             {
-                if (await ArchivosHelper.BorrarArchivo(pelicula.Url))
-                    peliculaDb.UrlPl = await ArchivosHelper.GuardarArchivo(pelicula.file);
+                if (await ArchivosHelper.BorrarArchivo(pelicula.Url, _peliculasTemp))
+                    peliculaDb.UrlPl = await ArchivosHelper.GuardarArchivo(pelicula.file, _peliculasTemp);
             }
 
             if (pelicula.portadaFile != null)
             {
-                if (await ArchivosHelper.BorrarArchivo(pelicula.Portada))
-                    peliculaDb.UrlPl = await ArchivosHelper.GuardarArchivo(pelicula.portadaFile);
+                if (await ArchivosHelper.BorrarArchivo(pelicula.Portada, _peliculasTemp))
+                    peliculaDb.UrlPl = await ArchivosHelper.GuardarArchivo(pelicula.portadaFile, _peliculasTemp);
             }
             // Update other properties
             peliculaDb.TituloPl = pelicula.Titulo;
@@ -180,6 +187,16 @@ namespace Multiplex.Business.Services
                 throw new Exception("No se encontró la película");
 
             return new FileStream(tempFilePath, FileMode.Open);
+        }
+        public async Task<FileStream> GetPeliculaPortada(int plId)
+        {
+            var portadaPl = await context.Peliculas.Where(x => x.IdPl == plId)
+                .Select(x => x.PortadaPl)
+                .FirstOrDefaultAsync();
+            if (!File.Exists(portadaPl))
+                throw new Exception("No se encontró la película");
+
+            return new FileStream(portadaPl, FileMode.Open);
         }
     }
 }

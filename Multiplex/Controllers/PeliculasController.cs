@@ -27,6 +27,7 @@ namespace Multiplex.Controllers
         public async Task<IActionResult> GetPeliculasPorGenero([FromRoute] int id) => Ok(await peliculasService.GetPeliculasPorGenero(id));
         [HttpPost]
         [RequestSizeLimit(524_288_000)]
+        [Consumes("multipart/form-data")]
         public async Task<IActionResult> SavePelicula([FromForm] PeliculaDTO pelicula) =>
             Ok(await peliculasService.CreatePelicula(pelicula));
         [HttpGet("{plId}")]
@@ -56,7 +57,21 @@ namespace Multiplex.Controllers
                 return NotFound(ex.Message);
             }
         }
-
+        [HttpGet("portada/{plId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetPortada([FromRoute]int plId)
+        {
+            try
+            {
+                FileStream fileStream = await peliculasService.GetPeliculaPortada(plId);
+                string contentType = "application/octet-stream";
+                return File(fileStream, contentType, $"movie{plId}");
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 
 }

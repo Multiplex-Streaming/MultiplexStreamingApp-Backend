@@ -17,5 +17,6 @@ namespace Multiplex.Business.Interfaces
         Task<PeliculaDTO> GetPelicula(int plId);
         Task<List<PeliculaDTO>> GetPeliculasPorGenero(int generoId);
         Task<FileStream> GetPeliculaFile(string url);
+        Task<FileStream> GetPeliculaPortada(int plId);
     }
 }

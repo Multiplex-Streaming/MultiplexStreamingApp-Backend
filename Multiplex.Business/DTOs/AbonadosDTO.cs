@@ -8,5 +8,8 @@ namespace Multiplex.Business.DTOs
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public DateTime FecAlta { get; set; }
+        public string Estado { get; set; }
+        public string Email { get; set; }
     }
 }
