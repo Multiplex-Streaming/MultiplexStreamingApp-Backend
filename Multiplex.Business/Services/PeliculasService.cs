@@ -144,28 +144,27 @@ namespace Multiplex.Business.Services
 
             if (pelicula.file != null)
             {
-                if (await ArchivosHelper.BorrarArchivo(pelicula.Url, _peliculasTemp))
-                    peliculaDb.UrlPl = await ArchivosHelper.GuardarArchivo(pelicula.file, _peliculasTemp);
+                await ArchivosHelper.BorrarArchivo(peliculaDb.UrlPl, _peliculasTemp);
+                peliculaDb.UrlPl = await ArchivosHelper.GuardarArchivo(pelicula.file, _peliculasTemp);
             }
 
             if (pelicula.portadaFile != null)
             {
-                if (await ArchivosHelper.BorrarArchivo(pelicula.Portada, _peliculasTemp))
-                    peliculaDb.UrlPl = await ArchivosHelper.GuardarArchivo(pelicula.portadaFile, _peliculasTemp);
+                await ArchivosHelper.BorrarArchivo(peliculaDb.PortadaPl, _peliculasTemp);
+                peliculaDb.PortadaPl = await ArchivosHelper.GuardarArchivo(pelicula.portadaFile, _peliculasTemp);
             }
             // Update other properties
             peliculaDb.TituloPl = pelicula.Titulo;
             peliculaDb.DescripcionPl = pelicula.Descripcion;
             peliculaDb.DuracionPl = pelicula.Duracion;
             peliculaDb.ElencoPl = pelicula.Elenco;
-            peliculaDb.PortadaPl = pelicula.Portada;
 
             // Remove and add related genres
             if (peliculaDb.GenerosPeliculas.Any())
                 context.RemoveRange(peliculaDb.GenerosPeliculas);
-            peliculaDb.GenerosPeliculas = pelicula.Generos.Select(x => new GenerosPeliculas()
+            peliculaDb.GenerosPeliculas = pelicula.GenerosList.Select(x => new GenerosPeliculas()
             {
-                IdGn = x.Id
+                IdGn = x
             }).ToHashSet();
 
             context.Update(peliculaDb);
