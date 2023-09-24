@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Multiplex.Business.DTOs;
 using Multiplex.Business.Interfaces;
+using Multiplex.Business.Services;
+using System.IO;
+using System;
 using System.Threading.Tasks;
 
 namespace Multiplex.Controllers
@@ -54,5 +57,27 @@ namespace Multiplex.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        [HttpGet("portada/{srId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetPortada([FromRoute] int srId)
+        {
+            try
+            {
+                FileStream fileStream = await seriesService.GetSeriePortada(srId);
+                string contentType = "application/octet-stream";
+                return File(fileStream, contentType, $"serie{srId}");
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        /*
+         * crear capitulo series/capitulo
+         * delete cap serie/capitulo HttpDelete("{IdSr}"
+         * HttpPut
+         */
     }
 }

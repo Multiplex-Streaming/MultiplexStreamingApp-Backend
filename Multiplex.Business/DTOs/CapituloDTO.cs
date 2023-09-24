@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -16,5 +17,8 @@ namespace Multiplex.Business.DTOs
         public string DuracionCp { get; set; }
         public string UrlCp { get; set; }
         public string Portada { get; set; }
+        public int Temporada { get; set; }
+        public IFormFile file { get; set; }
+        public IFormFile portadaFile { get; set; }
     }
 }

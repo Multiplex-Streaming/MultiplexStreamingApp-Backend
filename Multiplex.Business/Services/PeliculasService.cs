@@ -64,7 +64,7 @@ namespace Multiplex.Business.Services
         public async Task<bool> DeletePelicula(int plId)
         {
             var peliculaDb = await context.Peliculas.Include(x => x.GenerosPeliculas)
-                //.Include(x => x.HistorialPeliculas)
+                .Include(x => x.HistorialPeliculas)
                 .Include(x => x.FavoritosPelicula)
                 .Where(x => x.IdPl == plId)
                 .FirstOrDefaultAsync();

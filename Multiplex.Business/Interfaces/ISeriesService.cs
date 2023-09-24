@@ -16,5 +16,6 @@ namespace Multiplex.Business.Interfaces
         Task<bool> DeleteSerie(int IdSr);
         Task<SerieDTO> GetSerie(int IdSr);
         Task<FileStream> GetSerieFile(string url);
+        Task<FileStream> GetSeriePortada(int SrId);
     }
 }
