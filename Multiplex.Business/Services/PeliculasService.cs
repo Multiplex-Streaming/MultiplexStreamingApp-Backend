@@ -81,8 +81,8 @@ namespace Multiplex.Business.Services
             }
 
             // Remove related entities from context
-            //if (peliculaDb.HistorialPeliculas.Any())
-                //context.RemoveRange(peliculaDb.HistorialPeliculas);
+            if (peliculaDb.HistorialPeliculas.Any())
+                context.RemoveRange(peliculaDb.HistorialPeliculas);
             if (peliculaDb.GenerosPeliculas.Any())
                 context.RemoveRange(peliculaDb.GenerosPeliculas);
             if (peliculaDb.FavoritosPelicula.Any())

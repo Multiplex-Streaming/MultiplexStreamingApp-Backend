@@ -79,5 +79,19 @@ namespace Multiplex.Controllers
          * delete cap serie/capitulo HttpDelete("{IdSr}"
          * HttpPut
          */
+
+        //Crear capitulo
+        [HttpPost ("capitulo")]
+        public async Task<IActionResult> SaveCapitulo([FromForm] CapituloDTO capitulo) =>
+            Ok(await seriesService.CreateCapitulo(capitulo));
+
+        [HttpPut ("capitulo")]
+        public async Task<IActionResult> UpdateCapitulo([FromForm] CapituloDTO capitulo) =>
+            Ok(await seriesService.UpdateCapitulo(capitulo));
+
+        [HttpDelete("capitulo/{cpId}")]
+        public async Task<IActionResult> DeleteCapitulo([FromRoute] int cpId) =>
+            Ok(await seriesService.DeleteCapitulo(cpId));
+
     }
 }

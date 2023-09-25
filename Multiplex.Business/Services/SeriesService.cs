@@ -10,7 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Multiplex.Business.Services
@@ -189,7 +191,7 @@ namespace Multiplex.Business.Services
             serieEntity.UrlSr = serie.Url;
             serieEntity.PortadaSr = serie.Portada;
             // Update capítulos
-            if (serie.Capitulos !=  null)
+            if (serie.Capitulos != null)
             {
                 for (int i = 0; i < serie.Capitulos.Count; i++)
                 {
@@ -245,7 +247,100 @@ namespace Multiplex.Business.Services
 
             return new FileStream(portadaSr, FileMode.Open);
         }
-    
-        //Capitlos logica
+
+        //Capitlos logica>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        public async Task<bool> CreateCapitulo(CapituloDTO capitulo)
+        {
+            //Verificar que la serie exista
+            var serie = GetSerie(capitulo.IdSr);
+            if(serie == null)
+                return false;
+
+            long maxAllowedContentLength = _configuration.GetValue<long>("RequestLimits:MaxAllowedContentLength");
+
+            if (capitulo.file?.Length > maxAllowedContentLength)
+                throw new Exception("El tamaño del archivo supera el límite permitido");
+
+            if (capitulo.portadaFile?.Length > maxAllowedContentLength)
+                throw new Exception("El tamaño del archivo supera el límite permitido");
+            
+            string tempFileName = "", tempPortadaFileName = "";
+
+            if (capitulo.file != null)
+                tempFileName = await ArchivosHelper.GuardarArchivo(capitulo.file, _seriesTemp);
+            if (capitulo.portadaFile != null)
+                tempPortadaFileName = await ArchivosHelper.GuardarArchivo(capitulo.portadaFile, _seriesTemp);
+
+            //Crear la entidad del capitulo en la bd
+            var newCapitulo = new CapituloSerie
+            {
+                IdSr = capitulo.IdSr,
+                //IdCp = capitulo.IdCp,
+                NombreCp = capitulo.NombreCp,
+                DescripcionCp = capitulo.DescripcionCp,
+                DuracionCp = capitulo.DuracionCp,
+                TemporadaCp = capitulo.Temporada,
+                UrlCp = tempFileName,
+                PortadaCp = tempPortadaFileName,
+            };
+
+            context.CapituloSerie.Add(newCapitulo);
+            return await context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> UpdateCapitulo(CapituloDTO capitulo)
+        {
+            var capituloDb = await context.CapituloSerie.Where(x => x.IdCp == capitulo.IdCp).FirstOrDefaultAsync();
+            if (capituloDb == null)
+                return false;
+
+            long maxAllowedContentLength = _configuration.GetValue<long>("RequestLimits:MaxAllowedContentLength");
+
+            //Update file
+            if (capitulo.file != null)
+            {
+                if (capitulo.file?.Length > maxAllowedContentLength)
+                    throw new Exception("El tamaño del archivo supera el límite permitido");
+
+                await ArchivosHelper.BorrarArchivo(capituloDb.UrlCp, _seriesTemp);
+                capituloDb.UrlCp = await ArchivosHelper.GuardarArchivo(capitulo.file, _seriesTemp);
+            }
+            //Update portada
+            if (capitulo.portadaFile != null)
+            {
+                if (capitulo.portadaFile?.Length > maxAllowedContentLength)
+                    throw new Exception("El tamaño del archivo supera el límite permitido");
+
+                await ArchivosHelper.BorrarArchivo(capituloDb.PortadaCp, _seriesTemp);
+                capituloDb.PortadaCp = await ArchivosHelper.GuardarArchivo(capitulo.portadaFile, _seriesTemp);
+            }
+            //Update other properties
+            capituloDb.NombreCp = capitulo.NombreCp;
+            capituloDb.DescripcionCp = capitulo.DescripcionCp;
+            capituloDb.DuracionCp = capitulo.DuracionCp;
+            capituloDb.TemporadaCp = capitulo.Temporada;
+
+            context.CapituloSerie.Update(capituloDb);
+
+            return await context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> DeleteCapitulo(int cpId)
+        {
+            var capituloDb = await context.CapituloSerie.Where(x => x.IdCp == cpId).FirstOrDefaultAsync();
+            if (capituloDb == null)
+                return false;
+
+            // Delete associated file from PeliculasTemp folder
+            string tempFolderPath = Path.Combine(Path.GetTempPath(), "SeriesTemp");
+            string tempFilePath = Path.Combine(tempFolderPath, capituloDb.UrlCp);
+            if (File.Exists(tempFilePath))
+            {
+                File.Delete(tempFilePath);
+            }
+
+            context.CapituloSerie.Remove(capituloDb);
+            return await context.SaveChangesAsync() > 0;
+        }
     }
 }
