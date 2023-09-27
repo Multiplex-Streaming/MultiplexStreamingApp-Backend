@@ -169,19 +169,12 @@ namespace Multiplex.Business.Services
 
             long maxAllowedContentLength = _configuration.GetValue<long>("RequestLimits:MaxAllowedContentLength");
 
-            //foreach (var file in serie.files)
-            //{
-            //    if (file.Length > maxAllowedContentLength)
-            //    {
-            //        throw new Exception("El tamaño de uno o más archivos supera el límite permitido");
-            //    }
-            //}
+            string tempPortadaFileName = "";
 
-            // Guardar los archivos en una carpeta temporal
-            string tempFolderPath = Path.Combine(Path.GetTempPath(), "SeriesTemp");
-            if (!Directory.Exists(tempFolderPath))
+            if (serie.portadaFile != null)
             {
-                Directory.CreateDirectory(tempFolderPath);
+                await ArchivosHelper.BorrarArchivo(serie.Portada, _seriesTemp);
+                tempPortadaFileName = await ArchivosHelper.GuardarArchivo(serie.portadaFile, _seriesTemp);
             }
 
             // Update serie properties
@@ -189,37 +182,7 @@ namespace Multiplex.Business.Services
             serieEntity.DescripcionSr = serie.Descripcion;
             serieEntity.CantCapitulosSr = serie.CantidadCapitulos;
             serieEntity.UrlSr = serie.Url;
-            serieEntity.PortadaSr = serie.Portada;
-            // Update capítulos
-            if (serie.Capitulos != null)
-            {
-                for (int i = 0; i < serie.Capitulos.Count; i++)
-                {
-                    var capituloDto = serie.Capitulos[i];
-                    var capituloEntity = serieEntity.CapituloSerie.ElementAt(i);
-
-                    // Delete the previous file from SeriesTemp folder
-                    string prevTempFilePath = Path.Combine(tempFolderPath, capituloEntity.UrlCp);
-                    if (File.Exists(prevTempFilePath))
-                    {
-                        File.Delete(prevTempFilePath);
-                    }
-
-                    // Save the new file to SeriesTemp folder
-                    //string tempFileName = Guid.NewGuid().ToString() + Path.GetExtension(serie.file[i].FileName);
-                    //string tempFilePath = Path.Combine(tempFolderPath, tempFileName);
-                    //using (var fileStream = new FileStream(tempFilePath, FileMode.Create))
-                    //{
-                    //    await serie.files[i].CopyToAsync(fileStream);
-                    //}
-
-                    // Update capítulo properties
-                    capituloEntity.NombreCp = capituloDto.NombreCp;
-                    capituloEntity.DescripcionCp = capituloDto.DescripcionCp;
-                    capituloEntity.DuracionCp = capituloDto.DuracionCp;
-                    //capituloEntity.UrlCp = tempFileName;
-                }
-            }
+            serieEntity.PortadaSr = tempPortadaFileName;
 
             context.Series.Update(serieEntity);
             return await context.SaveChangesAsync() > 0;
@@ -252,7 +215,7 @@ namespace Multiplex.Business.Services
         public async Task<bool> CreateCapitulo(CapituloDTO capitulo)
         {
             //Verificar que la serie exista
-            var serie = GetSerie(capitulo.IdSr);
+            var serie = await GetSerie(capitulo.IdSr);
             if(serie == null)
                 return false;
 
@@ -279,7 +242,7 @@ namespace Multiplex.Business.Services
                 NombreCp = capitulo.NombreCp,
                 DescripcionCp = capitulo.DescripcionCp,
                 DuracionCp = capitulo.DuracionCp,
-                TemporadaCp = capitulo.Temporada,
+                TemporadaCp = capitulo.Temporada.ToString(),
                 UrlCp = tempFileName,
                 PortadaCp = tempPortadaFileName,
             };
@@ -318,7 +281,7 @@ namespace Multiplex.Business.Services
             capituloDb.NombreCp = capitulo.NombreCp;
             capituloDb.DescripcionCp = capitulo.DescripcionCp;
             capituloDb.DuracionCp = capitulo.DuracionCp;
-            capituloDb.TemporadaCp = capitulo.Temporada;
+            capituloDb.TemporadaCp = capitulo.Temporada.ToString();
 
             context.CapituloSerie.Update(capituloDb);
 
