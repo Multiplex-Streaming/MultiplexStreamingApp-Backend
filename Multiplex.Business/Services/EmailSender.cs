@@ -38,8 +38,14 @@ namespace Multiplex.Business.Services
                 };
 
                 mailMessage.To.Add(to);
+                try
+                {
+                    client.Send(mailMessage);
+                }
+                catch (Exception ex)
+                {
 
-                client.Send(mailMessage);
+                }
             }
         }
     }

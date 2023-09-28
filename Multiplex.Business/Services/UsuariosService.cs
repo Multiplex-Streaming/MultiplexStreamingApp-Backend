@@ -16,10 +16,12 @@ namespace Multiplex.Business.Services
     {
         private readonly MultiplexContext context;
         private readonly ILogger logger;
-        public UsuariosService(MultiplexContext context, ILogger<UsuariosService> logger)
+        private readonly IEmailSender emailSender;
+        public UsuariosService(MultiplexContext context, ILogger<UsuariosService> logger, IEmailSender emailSender)
         {
             this.context = context;
             this.logger = logger;
+            this.emailSender = emailSender;
         }
 
         public async Task<bool> ChangePassword(ChangePasswordDTO changePasswordInfo)
@@ -54,12 +56,19 @@ namespace Multiplex.Business.Services
                 NombreUsr = userAccount.Nombre,
                 CorreoUsr = userAccount.Correo,
                 PasswordUsr = userAccount.Clave,
-                //FechaAltaUsr = DateTime.Now,
+                FechaAltaUsr = DateTime.Now,
                 IdTc = tipoCuenta.IdTc,
                 IdEc = estadoCuenta.IdEc
             });
-            await context.SaveChangesAsync();
-            return true;
+
+            if (await context.SaveChangesAsync() > 0)
+            {
+                var body = "¡Bienvenido a Multiplex! Estamos emocionados de tenerte como parte de nuestra comunidad de entusiastas del entretenimiento.\r\n\r\nEn Multiplex, creemos en brindarte la mejor experiencia de streaming posible, llena de contenido emocionante y entretenimiento de alta calidad. Queremos que aproveches al máximo tu membresía, así que aquí tienes algunos consejos para comenzar:\r\n\r\nExplora nuestro catálogo: Tenemos una amplia selección de películas, series, documentales y programas de televisión disponibles para ti. ¡Empieza a explorar y descubre tus favoritos!\r\n\r\nCrea listas personalizadas: ¿Tienes una lista de películas y programas que deseas ver? Utiliza nuestra función de listas para llevar un registro de tus selecciones y obtener recomendaciones basadas en tus gustos.\r\n\r\nDisfruta de la reproducción sin anuncios: Como miembro premium, disfrutarás de una experiencia de visualización sin interrupciones. Olvídate de los anuncios y sumérgete en el contenido que amas.\r\n\r\nDescarga para ver sin conexión: ¿Viajas o te encuentras en un lugar sin conexión a internet? Descarga tus películas y series favoritas para verlas en cualquier momento y en cualquier lugar.\r\n\r\nSoporte 24/7: Si alguna vez tienes preguntas o experimentas algún problema, nuestro equipo de soporte está disponible las 24 horas del día, los 7 días de la semana, para ayudarte. No dudes en contactarnos en cualquier momento.\r\n\r\nEstamos comprometidos a brindarte una experiencia excepcional de streaming y a seguir mejorando nuestro servicio para satisfacer tus necesidades de entretenimiento. Gracias por unirte a nosotros en esta emocionante aventura.\r\n\r\nUna vez más, bienvenido a Multiplex. ¡Esperamos que disfrutes de cada momento que pases aquí!\r\n\r\nAtentamente,\r\n\r\nEquipo de Multiplex";
+                emailSender.SendEmail(userAccount.Correo, "¡Bienvenido a Multiplex!", body);
+                return true;
+            }
+
+            return false;
         }
 
         public async Task<List<AbonadosDTO>> GetAbonadosPendientes() => await context.Usuarios
