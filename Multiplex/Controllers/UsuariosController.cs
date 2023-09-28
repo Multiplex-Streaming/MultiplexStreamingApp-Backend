@@ -23,8 +23,8 @@ namespace Multiplex.Controllers
             this.usuariosService = usuariosService;
         }
 
-        [HttpGet("pendientes")]
-        public async Task<IActionResult> GetAbonadosPendientes() => Ok(await usuariosService.GetAbonadosPendientes());
+        [HttpGet("pendientes/{estado}")]
+        public async Task<IActionResult> GetAbonadosPendientes([FromRoute] string estado) => Ok(await usuariosService.GetAbonadosPorEstado(estado));
 
         [HttpPost]
         [AllowAnonymous]

@@ -9,6 +9,7 @@ namespace Multiplex.Business.Interfaces
     public interface IUsuariosService
     {
         Task<List<AbonadosDTO>> GetAbonadosPendientes();
+        Task<List<AbonadosDTO>> GetAbonadosPorEstado(string estado);
         UserInfoDTO UserExists(string userMail, string userPass);
         Task<bool> CreateUserAccount(UserAccountDTO userAccount);
         Task<bool> ChangePassword(ChangePasswordDTO changePasswordInfo);

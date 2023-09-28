@@ -75,6 +75,19 @@ namespace Multiplex.Business.Services
         })
         .ToListAsync();
 
+        public async Task<List<AbonadosDTO>> GetAbonadosPorEstado(string estado) => await context.Usuarios
+        .Where(x => x.IdEcNavigation.DescripcionEc.Equals(estado.ToUpper()) &&
+                    x.IdTcNavigation.DescripcionTc.Equals(TiposCuentasEnum.ABONADO))
+        .Select(x => new AbonadosDTO
+        {
+            Id = x.IdUsr,
+            Name = $"{x.ApellidoUsr} {x.NombreUsr}",
+            Estado = x.IdEcNavigation.DescripcionEc,
+            FecAlta = x.FechaAltaUsr,
+            Email = x.CorreoUsr
+        })
+        .ToListAsync();
+
         public UserInfoDTO UserExists(string userMail, string userPass) =>
             // AGREGO PARA QUE SOLO PERMITA LOGUEAR A LOS USUARIOS HABILITADOS
             context.Usuarios.Where(x => x.CorreoUsr.Equals(userMail) && x.PasswordUsr.Equals(userPass) &&
