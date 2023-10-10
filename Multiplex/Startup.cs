@@ -139,6 +139,7 @@ namespace Multiplex
             services.AddTransient<IPeliculasService, PeliculasService>();
             services.AddTransient<ISeriesService, SeriesService>();
             services.AddTransient<ITaxonomyService, TaxonomyService>();
+            services.AddTransient<IHistorialPeliculasService, HistorialPeliculasService>();
         }
     }
 }
