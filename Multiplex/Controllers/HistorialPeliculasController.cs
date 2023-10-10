@@ -9,7 +9,7 @@ namespace Multiplex.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class HistorialPeliculasController : BaseController
     {
         private readonly IHistorialPeliculasService historialPeliculasService;
@@ -30,5 +30,13 @@ namespace Multiplex.Controllers
         [HttpGet("{idUsr}")]
         public async Task<IActionResult> GetHistorialPeliculas([FromRoute] int idUsr) =>
             Ok(await historialPeliculasService.GetHistorialPeliculas(idUsr));
+
+        [HttpDelete("{idUsr}/{movieId}")]
+        public async Task<IActionResult> DeleteHistorialPelicula([FromBody] HistorialPeliculasDTO historialPelicula) =>
+            Ok(await historialPeliculasService.DeleteHistorialPelicula(historialPelicula));
+
+        [HttpGet("recomendaciones/{idUsr}")]
+        public async Task<IActionResult> GetRecomendaciones([FromRoute] int idUsr) =>
+            Ok(await historialPeliculasService.GetRecomendaciones(idUsr));
     }
 }

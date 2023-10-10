@@ -31,34 +31,92 @@ namespace Multiplex.Business.Services
         }
 
         //obtener el historial de ese usuario
-        public async Task<IEnumerable<HistorialPeliculasDTO>> GetHistorialPeliculas(int idUsr)
+        public async Task<IEnumerable<PeliculaDTO>> GetHistorialPeliculas(int idUsr)
         {
             var historialPeliculas = await context.HistorialPeliculas
                 .Where(h => h.IdUsr == idUsr)
-                .Select(h => new HistorialPeliculasDTO
+                .Select(h => new PeliculaDTO
                 {
-                    IdPl = h.IdPl,
-                    IdUsr = h.IdUsr
+                    Id = h.IdPl,
+                    Titulo = h.IdPlNavigation.TituloPl,
+                    Portada = h.IdPlNavigation.PortadaPl,
+                    Descripcion = h.IdPlNavigation.DescripcionPl,
+                    Duracion = h.IdPlNavigation.DuracionPl,
+                    Url = h.IdPlNavigation.UrlPl,
                 })
                 .ToListAsync();
 
             return historialPeliculas;
         }
 
-        public async Task<HistorialPeliculasDTO> UpdateHistorialPelicula(HistorialPeliculasDTO historialPelicula)
+        public async Task<PeliculaDTO> UpdateHistorialPelicula(HistorialPeliculasDTO historialPelicula)
         {
             var existingHistorialPelicula = await context.HistorialPeliculas.FindAsync(historialPelicula.IdPl);
             if (existingHistorialPelicula == null)
             {
-                return null; // El registro no se encontró
+                return null;
             }
 
-            // Actualizar propiedades según sea necesario
+            existingHistorialPelicula.IdPl = historialPelicula.IdPl;
             existingHistorialPelicula.IdUsr = historialPelicula.IdUsr;
 
+            context.HistorialPeliculas.Update(existingHistorialPelicula);
             await context.SaveChangesAsync();
 
-            return historialPelicula;
+            return new PeliculaDTO
+            {
+                Id = existingHistorialPelicula.IdPl,
+                Titulo = existingHistorialPelicula.IdPlNavigation.TituloPl,
+                Portada = existingHistorialPelicula.IdPlNavigation.PortadaPl,
+                Descripcion = existingHistorialPelicula.IdPlNavigation.DescripcionPl,
+                Duracion = existingHistorialPelicula.IdPlNavigation.DuracionPl,
+                Url = existingHistorialPelicula.IdPlNavigation.UrlPl
+            }; // Devuelve el registro actualizado
+        }
+
+        public async Task<bool> DeleteHistorialPelicula(HistorialPeliculasDTO historialPelicula)
+        {
+            var existingHistorialPelicula = await context.HistorialPeliculas.FindAsync(historialPelicula.IdPl);
+            if (existingHistorialPelicula == null)
+            {
+                return false;
+            }
+
+            context.HistorialPeliculas.Remove(existingHistorialPelicula);
+
+            return await context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<IEnumerable<PeliculaDTO>> GetRecomendaciones(int idUsr)
+        {
+            // Obtén el historial de películas del usuario
+            var historialUsuario = await context.HistorialPeliculas
+                .Where(h => h.IdUsr == idUsr)
+                .Select(h => h.IdPl)
+                .ToListAsync();
+
+            // Encuentra otros usuarios que hayan visto las mismas películas
+            var usuariosSimilares = await context.HistorialPeliculas
+                .Where(h => h.IdUsr != idUsr && historialUsuario.Contains(h.IdPl))
+                .Select(h => h.IdUsr)
+                .Distinct()
+                .ToListAsync();
+
+            // Recomendar películas vistas por usuarios similares pero no vistas por el usuario actual
+            var recomendaciones = await context.HistorialPeliculas
+                .Where(h => usuariosSimilares.Contains(h.IdUsr) && !historialUsuario.Contains(h.IdPl))
+                .Select(h => new PeliculaDTO
+                {
+                    Id = h.IdPl,
+                    Titulo = h.IdPlNavigation.TituloPl,
+                    Portada = h.IdPlNavigation.PortadaPl,
+                    Descripcion = h.IdPlNavigation.DescripcionPl,
+                    Duracion = h.IdPlNavigation.DuracionPl,
+                    Url = h.IdPlNavigation.UrlPl
+                })
+                .ToListAsync();
+
+            return recomendaciones;
         }
 
     }
