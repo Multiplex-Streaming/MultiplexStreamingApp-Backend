@@ -52,7 +52,7 @@ namespace Multiplex.Business.Services
             var existingHistorialSerie = await context.HistorialSeries.FindAsync(historialSerie.IdSr);
             if (existingHistorialSerie == null)
             {
-                return null; // El registro no se encontró
+                return null;
             }
 
             existingHistorialSerie.IdSr = historialSerie.IdSr;
@@ -77,7 +77,7 @@ namespace Multiplex.Business.Services
             var existingHistorialSerie = await context.HistorialSeries.FindAsync(historialSerie.IdSr);
             if (existingHistorialSerie == null)
             {
-                return false; // El registro no se encontró
+                return false;
             }
 
             context.HistorialSeries.Remove(existingHistorialSerie);
@@ -106,7 +106,10 @@ namespace Multiplex.Business.Services
                 .Select(h => new SerieDTO
                 {
                     Id = h.IdSr,
-                    // Agrega otras propiedades de la serie si es necesario
+                    Nombre = h.IdSrNavigation.NombreSr,
+                    Portada = h.IdSrNavigation.PortadaSr,
+                    Descripcion = h.IdSrNavigation.DescripcionSr,
+                    Url = h.IdSrNavigation.UrlSr
                 })
                 .ToListAsync();
 

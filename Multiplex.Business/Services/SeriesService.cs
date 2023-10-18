@@ -96,6 +96,7 @@ namespace Multiplex.Business.Services
 
         public async Task<bool> CreateSerie(SerieDTO serie)
         {
+            serie.Id = 1;
             long maxAllowedContentLength = _configuration.GetValue<long>("RequestLimits:MaxAllowedContentLength");
 
             if (serie.file?.Length > maxAllowedContentLength)

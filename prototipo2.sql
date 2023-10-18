@@ -24,6 +24,7 @@ create table PELICULAS
     DURACION_PL             VARCHAR(10)                   ,
     ELENCO_PL               VARCHAR(500)                  ,
     URL_PL                  VARCHAR(100)          not null,
+	PORTADA_PL              VARCHAR(100)          not null,
     primary key (ID_PL)
 );
 
@@ -35,6 +36,7 @@ create table SERIES
     NOMBRE_SR               VARCHAR(50)           not null,
     DESCRIPCION_SR          VARCHAR(500)                  ,
     CANT_CAPITULOS_SR       INTEGER                       ,
+	PORTADA_SR              VARCHAR(100)          not null,
     primary key (ID_SR)
 );
 
@@ -91,6 +93,7 @@ create table CAPITULO_SERIE
     DESCRIPCION_CP          VARCHAR(100)                  ,
     DURACION_CP             VARCHAR(10)                   ,
     URL_CP                  VARCHAR(100)          not null,
+	PORTADA_CP              VARCHAR(100)          not null,
     primary key (ID_SR, ID_CP),
     foreign key  (ID_SR)
        references SERIES (ID_SR)
