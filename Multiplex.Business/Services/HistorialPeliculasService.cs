@@ -19,15 +19,28 @@ namespace Multiplex.Business.Services
         {
             this.context = context;
         }
-
-        public async Task<bool> CreateHistorialPelicula(HistorialPeliculasDTO historialPelicula)
+        
+        public async Task<string> CreateHistorialPelicula(HistorialPeliculasDTO historialPelicula)
         {
+            if (await context.HistorialPeliculas.AnyAsync(h => h.IdPl == historialPelicula.IdPl && h.IdUsr == historialPelicula.IdUsr))
+            {
+                return "El historial de la película ya está registrado para este usuario.";
+            }
+
             context.Add(new HistorialPeliculas()
             {
                 IdPl = historialPelicula.IdPl,
                 IdUsr = historialPelicula.IdUsr
             });
-            return await context.SaveChangesAsync() > 0;
+
+            if (await context.SaveChangesAsync() > 0)
+            {
+                return "Historial de película registrado con éxito.";
+            }
+            else
+            {
+                return "No se pudo registrar el historial de película.";
+            }
         }
 
         //obtener el historial de ese usuario
@@ -47,31 +60,6 @@ namespace Multiplex.Business.Services
                 .ToListAsync();
 
             return historialPeliculas;
-        }
-
-        public async Task<PeliculaDTO> UpdateHistorialPelicula(HistorialPeliculasDTO historialPelicula)
-        {
-            var existingHistorialPelicula = await context.HistorialPeliculas.FindAsync(historialPelicula.IdPl);
-            if (existingHistorialPelicula == null)
-            {
-                return null;
-            }
-
-            existingHistorialPelicula.IdPl = historialPelicula.IdPl;
-            existingHistorialPelicula.IdUsr = historialPelicula.IdUsr;
-
-            context.HistorialPeliculas.Update(existingHistorialPelicula);
-            await context.SaveChangesAsync();
-
-            return new PeliculaDTO
-            {
-                Id = existingHistorialPelicula.IdPl,
-                Titulo = existingHistorialPelicula.IdPlNavigation.TituloPl,
-                Portada = existingHistorialPelicula.IdPlNavigation.PortadaPl,
-                Descripcion = existingHistorialPelicula.IdPlNavigation.DescripcionPl,
-                Duracion = existingHistorialPelicula.IdPlNavigation.DuracionPl,
-                Url = existingHistorialPelicula.IdPlNavigation.UrlPl
-            }; // Devuelve el registro actualizado
         }
 
         public async Task<bool> DeleteHistorialPelicula(HistorialPeliculasDTO historialPelicula)

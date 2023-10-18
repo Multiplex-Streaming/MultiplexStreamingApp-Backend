@@ -141,6 +141,8 @@ namespace Multiplex
             services.AddTransient<ITaxonomyService, TaxonomyService>();
             services.AddTransient<IHistorialPeliculasService, HistorialPeliculasService>();
             services.AddTransient<IHistorialSeriesService, HistorialSeriesService>();
+            services.AddTransient<IFavoritosPeliculaService, FavoritosPeliculaService>();
+            services.AddTransient<IFavoritosSeriesService, FavoritosSeriesService>();
         }
     }
 }

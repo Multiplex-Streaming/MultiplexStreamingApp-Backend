@@ -9,7 +9,7 @@ namespace Multiplex.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class HistorialSeriesController : BaseController
     {
         private readonly IHistorialSeriesService historialSeriesService;
@@ -22,10 +22,6 @@ namespace Multiplex.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveHistorialSerie([FromBody] HistorialSeriesDTO historialSerie) =>
             Ok(await historialSeriesService.CreateHistorialSerie(historialSerie));
-
-        [HttpPut]
-        public async Task<IActionResult> UpdateHistorialSerie([FromBody] HistorialSeriesDTO historialSerie) =>
-            Ok(await historialSeriesService.UpdateHistorialSerie(historialSerie));
 
         [HttpGet("{idUsr}")]
         public async Task<IActionResult> GetHistorialSeries([FromRoute] int idUsr) =>

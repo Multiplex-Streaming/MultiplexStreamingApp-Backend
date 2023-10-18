@@ -20,14 +20,29 @@ namespace Multiplex.Business.Services
             this.context = context;
         }
 
-        public async Task<bool> CreateHistorialSerie(HistorialSeriesDTO historialSerie)
+        public async Task<string> CreateHistorialSerie(HistorialSeriesDTO historialSerie)
         {
+            // Comprobar si el historial ya fue registrado
+            if (await context.HistorialSeries.AnyAsync(h => h.IdSr == historialSerie.IdSr && h.IdUsr == historialSerie.IdUsr))
+            {
+                return "El historial ya está registrado.";
+            }
+
             context.Add(new HistorialSeries()
             {
                 IdSr = historialSerie.IdSr,
                 IdUsr = historialSerie.IdUsr
             });
-            return await context.SaveChangesAsync() > 0;
+
+
+            if (await context.SaveChangesAsync() > 0)
+            {
+                return "Historial registrado con éxito.";
+            }
+            else
+            {
+                return "No se pudo registrar el historial.";
+            }
         }
 
         public async Task<IEnumerable<SerieDTO>> GetHistorialSeries(int idUsr)
@@ -41,35 +56,23 @@ namespace Multiplex.Business.Services
                     Portada = h.IdSrNavigation.PortadaSr,
                     Descripcion = h.IdSrNavigation.DescripcionSr,
                     Url = h.IdSrNavigation.UrlSr,
+                    CantidadCapitulos = h.IdSrNavigation.CantCapitulosSr,
+                    Capitulos = h.IdSrNavigation.CapituloSerie.Select(c => new CapituloDTO
+                    {
+                        IdCp = c.IdCp,
+                        NombreCp = c.NombreCp,
+                        DescripcionCp = c.DescripcionCp,
+                        DuracionCp = c.DuracionCp,
+                        UrlCp = c.UrlCp,
+                        Portada = c.PortadaCp,
+                        IdSr = c.IdSr,
+                        Temporada = int.Parse(c.TemporadaCp)
+
+                    }).ToList()
                 })
                 .ToListAsync();
 
             return historialSeries;
-        }
-
-        public async Task<SerieDTO> UpdateHistorialSerie(HistorialSeriesDTO historialSerie)
-        {
-            var existingHistorialSerie = await context.HistorialSeries.FindAsync(historialSerie.IdSr);
-            if (existingHistorialSerie == null)
-            {
-                return null;
-            }
-
-            existingHistorialSerie.IdSr = historialSerie.IdSr;
-            existingHistorialSerie.IdUsr = historialSerie.IdUsr;
-
-            context.HistorialSeries.Update(existingHistorialSerie);
-            await context.SaveChangesAsync();
-
-            return new SerieDTO
-            {
-                Id = existingHistorialSerie.IdSr,
-                Nombre = existingHistorialSerie.IdSrNavigation.NombreSr,
-                Portada = existingHistorialSerie.IdSrNavigation.PortadaSr,
-                Descripcion = existingHistorialSerie.IdSrNavigation.DescripcionSr,
-                Url = existingHistorialSerie.IdSrNavigation.UrlSr
-
-            }; // Devuelve el registro actualizado
         }
 
         public async Task<bool> DeleteHistorialSerie(HistorialSeriesDTO historialSerie)
@@ -109,7 +112,20 @@ namespace Multiplex.Business.Services
                     Nombre = h.IdSrNavigation.NombreSr,
                     Portada = h.IdSrNavigation.PortadaSr,
                     Descripcion = h.IdSrNavigation.DescripcionSr,
-                    Url = h.IdSrNavigation.UrlSr
+                    Url = h.IdSrNavigation.UrlSr,
+                    CantidadCapitulos = h.IdSrNavigation.CantCapitulosSr,
+                    Capitulos = h.IdSrNavigation.CapituloSerie.Select(c => new CapituloDTO
+                    {
+                        IdCp = c.IdCp,
+                        NombreCp = c.NombreCp,
+                        DescripcionCp = c.DescripcionCp,
+                        DuracionCp = c.DuracionCp,
+                        UrlCp = c.UrlCp,
+                        Portada = c.PortadaCp,
+                        IdSr = c.IdSr,
+                        Temporada = int.Parse(c.TemporadaCp)
+
+                    }).ToList()
                 })
                 .ToListAsync();
 
