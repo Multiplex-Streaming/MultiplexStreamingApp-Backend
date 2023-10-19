@@ -24,7 +24,8 @@ namespace Multiplex.IdentityServer
             if (user != null)
             {
                 var claims = new List<Claim>() {
-                    new Claim(ClaimTypes.Name, user.UserName)
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Role, user.IsAdmin ? "admin":"abonado")
                 };
                 context.Result = new GrantValidationResult(user.Id.ToString(),"password",claims);
                 return Task.FromResult(context.Result);

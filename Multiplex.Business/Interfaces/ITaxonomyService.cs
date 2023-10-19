@@ -8,6 +8,10 @@ namespace Multiplex.Business.Interfaces
 {
     public interface ITaxonomyService
     {
-        Task<List<PeliculaDTO>> GetPeliculasPorGenero(int generoId);
+        Task<List<GeneroDTO>> GetGeneros();
+        Task<bool> SaveGenero(GeneroDTO genero);
+
+        //Retornar Capitulos
+        Task<List<CapituloDTO>> GetCapitulos();
     }
 }

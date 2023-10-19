@@ -21,6 +21,8 @@ namespace Multiplex.Domain.Models
         public string NombreSr { get; set; }
         public string DescripcionSr { get; set; }
         public int? CantCapitulosSr { get; set; }
+        public string UrlSr { get; set; }
+        public string PortadaSr { get; set; }
 
         public virtual ICollection<CapituloSerie> CapituloSerie { get; set; }
         public virtual ICollection<FavoritosSeries> FavoritosSeries { get; set; }
