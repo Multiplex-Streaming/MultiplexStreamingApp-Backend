@@ -9,7 +9,7 @@ namespace Multiplex.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class HistorialSeriesController : BaseController
     {
         private readonly IHistorialSeriesService historialSeriesService;

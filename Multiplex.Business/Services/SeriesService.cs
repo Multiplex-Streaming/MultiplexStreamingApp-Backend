@@ -96,35 +96,43 @@ namespace Multiplex.Business.Services
 
         public async Task<bool> CreateSerie(SerieDTO serie)
         {
-            long maxAllowedContentLength = _configuration.GetValue<long>("RequestLimits:MaxAllowedContentLength");
-
-            if (serie.file?.Length > maxAllowedContentLength)
-                throw new Exception("El tamaño del archivo supera el límite permitido");
-
-            if (serie.portadaFile?.Length > maxAllowedContentLength)
-                throw new Exception("El tamaño del archivo supera el límite permitido");
-
-            string tempFileName = "", tempPortadaFileName = "";
-
-            if (serie.file != null)
-                tempFileName = await ArchivosHelper.GuardarArchivo(serie.file, _seriesTemp);
-            if (serie.portadaFile != null)
-                tempPortadaFileName = await ArchivosHelper.GuardarArchivo(serie.portadaFile, _seriesTemp);
-
-
-            // Crear la entidad de la serie en la base de datos
-            var serieEntity = new Series()
+            try
             {
-                IdSr = serie.Id,
-                NombreSr = serie.Nombre,
-                DescripcionSr = serie.Descripcion,
-                CantCapitulosSr = serie.CantidadCapitulos,
-                PortadaSr = tempPortadaFileName,
-                UrlSr = tempFileName,
-            };
+                long maxAllowedContentLength = _configuration.GetValue<long>("RequestLimits:MaxAllowedContentLength");
 
-            context.Series.Add(serieEntity);
-            return await context.SaveChangesAsync() > 0;
+                if (serie.file?.Length > maxAllowedContentLength)
+                    throw new Exception("El tamaño del archivo supera el límite permitido");
+
+                if (serie.portadaFile?.Length > maxAllowedContentLength)
+                    throw new Exception("El tamaño del archivo supera el límite permitido");
+
+                string tempFileName = "", tempPortadaFileName = "";
+
+                if (serie.file != null)
+                    tempFileName = await ArchivosHelper.GuardarArchivo(serie.file, _seriesTemp);
+                if (serie.portadaFile != null)
+                    tempPortadaFileName = await ArchivosHelper.GuardarArchivo(serie.portadaFile, _seriesTemp);
+
+
+                // Crear la entidad de la serie en la base de datos
+                var serieEntity = new Series()
+                {
+                    NombreSr = serie.Nombre,
+                    DescripcionSr = serie.Descripcion,
+                    CantCapitulosSr = serie.CantidadCapitulos,
+                    PortadaSr = tempPortadaFileName,
+                    UrlSr = tempFileName,
+                };
+
+                context.Series.Add(serieEntity);
+                return await context.SaveChangesAsync() > 0;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return false;
+            }
+            
         }
 
         public async Task<bool> DeleteSerie(int IdSr)

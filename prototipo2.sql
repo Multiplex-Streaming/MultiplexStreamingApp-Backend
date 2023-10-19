@@ -30,6 +30,10 @@ create table PELICULAS
 
 create unique index PELICULAS_PK on PELICULAS (ID_PL asc);
 
+ALTER TABLE PELICULAS
+ALTER COLUMN ID_PL INT IDENTITY(1,1);
+
+
 create table SERIES
 (
     ID_SR                   INTEGER               not null,
@@ -205,3 +209,6 @@ create index FAVORITOS_SERIES_FK2 on FAVORITOS_SERIES (ID_SR asc);
 
 create index FAVORITOS_SERIES_FK on FAVORITOS_SERIES (ID_USR asc);
 
+
+
+drop DATABASE multiplex

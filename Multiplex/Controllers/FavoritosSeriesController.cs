@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Multiplex.Business.DTOs;
 using Multiplex.Business.Interfaces;
+using System.Threading.Tasks;
 
 namespace Multiplex.Controllers
 {
@@ -19,15 +20,16 @@ namespace Multiplex.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveFavoritosSeries([FromBody] FavoritosSeriesDTO favoritosSeries) =>
-            Ok(favoritosSeriesService.CreateFavoritosSeries(favoritosSeries));
+        public async Task<IActionResult> SaveFavoritosSerie([FromBody] FavoritosSeriesDTO favoritosSerie) =>
+            Ok(await favoritosSeriesService.CreateFavoritosSeries(favoritosSerie));
 
         [HttpDelete]
-        public IActionResult DeleteFavoritosSeries([FromBody] FavoritosSeriesDTO favoritosSeries) =>
-            Ok(favoritosSeriesService.DeleteFavoritosSeries(favoritosSeries));
+        public async Task<IActionResult> DeleteFavoritosSerie([FromBody] FavoritosSeriesDTO favoritosSerie) =>
+            Ok(await favoritosSeriesService.DeleteFavoritosSeries(favoritosSerie));
 
         [HttpGet]
-        public IActionResult GetFavoritosSeries([FromQuery] int idUsr) =>
-            Ok(favoritosSeriesService.GetFavoritosSeries(idUsr));
+        public async Task<IActionResult> GetFavoritosSerie([FromQuery] int idUsr) =>
+            Ok(await favoritosSeriesService.GetFavoritosSeries(idUsr));
+
     }
 }
