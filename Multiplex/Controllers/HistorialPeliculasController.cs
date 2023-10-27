@@ -20,16 +20,16 @@ namespace Multiplex.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveHistorialPelicula([FromBody] HistorialPeliculasDTO historialPelicula) =>
-            Ok(await historialPeliculasService.CreateHistorialPelicula(historialPelicula));
+        public async Task<IActionResult> SaveHistorialPelicula([FromQuery] int peliculaId) =>
+            Ok(await historialPeliculasService.CreateHistorialPelicula(userId, peliculaId));
 
-        [HttpGet("{idUsr}")]
-        public async Task<IActionResult> GetHistorialPeliculas([FromRoute] int idUsr) =>
-            Ok(await historialPeliculasService.GetHistorialPeliculas(idUsr));
+        [HttpGet]
+        public async Task<IActionResult> GetHistorialPeliculas() =>
+            Ok(await historialPeliculasService.GetHistorialPeliculas(userId));
 
-        [HttpDelete("{idUsr}/{movieId}")]
-        public async Task<IActionResult> DeleteHistorialPelicula([FromBody] HistorialPeliculasDTO historialPelicula) =>
-            Ok(await historialPeliculasService.DeleteHistorialPelicula(historialPelicula));
+        [HttpDelete]
+        public async Task<IActionResult> DeleteHistorialPelicula([FromQuery] int peliculaId) =>
+            Ok(await historialPeliculasService.DeleteHistorialPelicula(peliculaId, userId));
 
         [HttpGet("recomendaciones/{idUsr}")]
         public async Task<IActionResult> GetRecomendaciones([FromRoute] int idUsr) =>

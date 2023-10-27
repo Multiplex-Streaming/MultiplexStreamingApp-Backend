@@ -44,7 +44,6 @@ namespace Multiplex.Business.Services
                 Descripcion = serieEntity.DescripcionSr,
                 CantidadCapitulos = serieEntity.CantCapitulosSr,
                 Url = serieEntity.UrlSr,
-                Portada = serieEntity.PortadaSr,
                 Capitulos = serieEntity.CapituloSerie.Select(capituloEntity => new CapituloDTO
                 {
                     IdSr = capituloEntity.IdSr,
@@ -52,6 +51,7 @@ namespace Multiplex.Business.Services
                     NombreCp = capituloEntity.NombreCp,
                     DescripcionCp = capituloEntity.DescripcionCp,
                     DuracionCp = capituloEntity.DuracionCp,
+                    Temporada = int.Parse(capituloEntity.TemporadaCp),
                     UrlCp = capituloEntity.UrlCp
                 }).ToList(),
             }).ToList();
@@ -312,6 +312,16 @@ namespace Multiplex.Business.Services
 
             context.CapituloSerie.Remove(capituloDb);
             return await context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<FileStream> GetCapituloPortada(int cpId)
+        {
+            var portadaCp = await context.CapituloSerie.Where(x => x.IdCp == cpId)
+                .Select(x => x.PortadaCp).FirstOrDefaultAsync();
+            if (!File.Exists(portadaCp))
+                throw new Exception("No se encontró el capitulo");
+
+            return new FileStream(portadaCp, FileMode.Open);
         }
     }
 }
