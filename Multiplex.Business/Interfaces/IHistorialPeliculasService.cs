@@ -13,5 +13,7 @@ namespace Multiplex.Business.Interfaces
         Task<IEnumerable<PeliculaDTO>> GetHistorialPeliculas(int idUsr);
         Task<bool> DeleteHistorialPelicula(int peliculaId, int idUsr);
         Task<IEnumerable<PeliculaDTO>> GetRecomendaciones(int idUsr);
+        Task<bool> UpdateHistorial(int idUser, int idPl, int minutos, int segundos);
+        Task<HistorialPeliculasDTO> GetHistorialPelicula(int idUsr, int idPl);
     }
 }

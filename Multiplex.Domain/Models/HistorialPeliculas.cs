@@ -11,6 +11,8 @@ namespace Multiplex.Domain.Models
     {
         public int IdPl { get; set; }
         public int IdUsr { get; set; }
+        public short? Minutos { get; set; }
+        public short? Segundos { get; set; }
 
         public virtual Peliculas IdPlNavigation { get; set; }
         public virtual Usuarios IdUsrNavigation { get; set; }

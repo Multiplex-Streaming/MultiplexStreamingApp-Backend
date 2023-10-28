@@ -123,5 +123,27 @@ namespace Multiplex.Business.Services
             return recomendaciones;
         }
 
+        public async Task<bool> UpdateHistorial(int idUser, int idPl, int minutos, int segundos)
+        {
+            var historial = await context.HistorialPeliculas.Where(x => x.IdPl == idPl && x.IdUsr == idUser)
+                .FirstOrDefaultAsync();
+            historial.Minutos =  Convert.ToInt16(minutos);
+            historial.Segundos = Convert.ToInt16(segundos);
+            context.HistorialPeliculas.Update(historial);
+            return await context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<HistorialPeliculasDTO> GetHistorialPelicula(int idUsr, int idPl)
+        {
+            return await context.HistorialPeliculas.Where(x => x.IdPl == idPl && x.IdUsr == idUsr)
+                .Select(x => new HistorialPeliculasDTO()
+                {
+                    IdPl = x.IdPl,
+                    IdUsr = x.IdUsr,
+                    Minutos = x.Minutos ?? 0,
+                    Segundos = x.Segundos ?? 0
+                })
+                .FirstOrDefaultAsync();
+        }
     }
 }
