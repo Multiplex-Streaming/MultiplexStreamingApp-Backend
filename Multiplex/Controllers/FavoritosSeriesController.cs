@@ -9,7 +9,7 @@ namespace Multiplex.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class FavoritosSeriesController : BaseController
     {
         private readonly IFavoritosSeriesService favoritosSeriesService;

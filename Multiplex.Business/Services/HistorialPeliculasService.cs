@@ -106,6 +106,5 @@ namespace Multiplex.Business.Services
 
             return recomendaciones;
         }
-
     }
 }
