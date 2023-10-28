@@ -93,5 +93,20 @@ namespace Multiplex.Controllers
         public async Task<IActionResult> DeleteCapitulo([FromRoute] int cpId) =>
             Ok(await seriesService.DeleteCapitulo(cpId));
 
+        [HttpGet("capitulo/portada/{cpId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetCapituloPortada([FromRoute] int cpId)
+        {
+            try
+            {
+                FileStream fileStream = await seriesService.GetCapituloPortada(cpId);
+                string contentType = "application/octet-stream";
+                return File(fileStream, contentType, $"capitulo{cpId}");
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

@@ -20,28 +20,35 @@ namespace Multiplex.Business.Services
             this.context = context;
         }
 
-        public async Task<string> CreateHistorialSerie(HistorialSeriesDTO historialSerie)
+        public async Task<string> CreateHistorialSerie(int userId, int serieId)
         {
-            // Comprobar si el historial ya fue registrado
-            if (await context.HistorialSeries.AnyAsync(h => h.IdSr == historialSerie.IdSr && h.IdUsr == historialSerie.IdUsr))
+            try 
             {
-                return "El historial ya está registrado.";
+                // Comprobar si el historial ya fue registrado
+                if (await context.HistorialSeries.AnyAsync(h => h.IdSr == serieId && h.IdUsr == userId))
+                {
+                    return "El historial de la serie ya está registrado para este usuario.";
+                }
+
+                context.Add(new HistorialSeries()
+                {
+                    IdSr = serieId,
+                    IdUsr = userId
+                });
+
+
+                if (await context.SaveChangesAsync() > 0)
+                {
+                    return "Historial registrado con éxito.";
+                }
+                else
+                {
+                    return "No se pudo registrar el historial.";
+                }
             }
-
-            context.Add(new HistorialSeries()
+            catch (Exception ex)
             {
-                IdSr = historialSerie.IdSr,
-                IdUsr = historialSerie.IdUsr
-            });
-
-
-            if (await context.SaveChangesAsync() > 0)
-            {
-                return "Historial registrado con éxito.";
-            }
-            else
-            {
-                return "No se pudo registrar el historial.";
+                throw new Exception(ex.ToString());
             }
         }
 
@@ -75,9 +82,9 @@ namespace Multiplex.Business.Services
             return historialSeries;
         }
 
-        public async Task<bool> DeleteHistorialSerie(HistorialSeriesDTO historialSerie)
+        public async Task<bool> DeleteHistorialSerie(int userId, int serieId)
         {
-            var existingHistorialSerie = await context.HistorialSeries.FindAsync(historialSerie.IdSr);
+            var existingHistorialSerie = await context.HistorialSeries.FindAsync(serieId, userId);
             if (existingHistorialSerie == null)
             {
                 return false;

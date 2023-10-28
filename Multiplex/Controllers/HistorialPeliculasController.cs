@@ -20,19 +20,27 @@ namespace Multiplex.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveHistorialPelicula([FromBody] HistorialPeliculasDTO historialPelicula) =>
-            Ok(await historialPeliculasService.CreateHistorialPelicula(historialPelicula));
+        public async Task<IActionResult> SaveHistorialPelicula([FromQuery] int peliculaId) =>
+            Ok(await historialPeliculasService.CreateHistorialPelicula(userId, peliculaId));
 
-        [HttpGet("{idUsr}")]
-        public async Task<IActionResult> GetHistorialPeliculas([FromRoute] int idUsr) =>
-            Ok(await historialPeliculasService.GetHistorialPeliculas(idUsr));
+        [HttpGet]
+        public async Task<IActionResult> GetHistorialPeliculas() =>
+            Ok(await historialPeliculasService.GetHistorialPeliculas(userId));
 
-        [HttpDelete("{idUsr}/{movieId}")]
-        public async Task<IActionResult> DeleteHistorialPelicula([FromBody] HistorialPeliculasDTO historialPelicula) =>
-            Ok(await historialPeliculasService.DeleteHistorialPelicula(historialPelicula));
+        [HttpDelete]
+        public async Task<IActionResult> DeleteHistorialPelicula([FromQuery] int peliculaId) =>
+            Ok(await historialPeliculasService.DeleteHistorialPelicula(peliculaId, userId));
 
-        [HttpGet("recomendaciones/{idUsr}")]
-        public async Task<IActionResult> GetRecomendaciones([FromRoute] int idUsr) =>
-            Ok(await historialPeliculasService.GetRecomendaciones(idUsr));
+        [HttpGet("recomendaciones")]
+        public async Task<IActionResult> GetRecomendaciones() =>
+            Ok(await historialPeliculasService.GetRecomendaciones(userId));
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateHistorialPelicula([FromQuery] int peliculaId, [FromQuery] int minutos, [FromQuery] int segundos) =>
+            Ok(await historialPeliculasService.UpdateHistorial(userId, peliculaId, minutos, segundos));
+
+        [HttpGet("ultimo-guardado/{idPl}")]
+        public async Task<IActionResult> GetHistorialPeliculas([FromRoute] int idPl) =>
+            Ok(await historialPeliculasService.GetHistorialPelicula(userId, idPl));
     }
 }

@@ -10,5 +10,7 @@ namespace Multiplex.Business.DTOs
     {
         public int IdPl { get; set; }
         public int IdUsr { get; set; }
+        public short Minutos { get; set; }
+        public short Segundos { get; set; }
     }
 }
