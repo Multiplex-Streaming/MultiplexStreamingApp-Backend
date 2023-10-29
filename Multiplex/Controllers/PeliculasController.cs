@@ -40,32 +40,33 @@ namespace Multiplex.Controllers
         public async Task<IActionResult> UpdatePelicula([FromForm] PeliculaDTO pelicula) =>
             Ok(await peliculasService.UpdatePelicula(pelicula));
 
-        [HttpGet("descargar/{url}")]
-        public async Task<IActionResult> DescargarPelicula(string url)
-        {
-            try
-            {
-                FileStream fileStream = await peliculasService.GetPeliculaFile(url);
-
-                // Determinar el tipo de contenido según el archivo (por ejemplo, "video/mp4")
-                string contentType = "application/octet-stream";
-
-                return File(fileStream, contentType, Path.GetFileName(url));
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
-        }
         [HttpGet("portada/{plId}")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetPortada([FromRoute]int plId)
+        public async Task<IActionResult> GetPortada([FromRoute] int plId)
         {
             try
             {
                 FileStream fileStream = await peliculasService.GetPeliculaPortada(plId);
                 string contentType = "application/octet-stream";
                 return File(fileStream, contentType, $"movie{plId}");
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+        [HttpGet("descargar/{idPl}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetFilePelicula([FromRoute] int idPl)
+        {
+            try
+            {
+                var fileStream = await peliculasService.GetPeliculaFile(idPl);
+
+                // Determinar el tipo de contenido según el archivo (por ejemplo, "video/mp4")
+                var contentType = "video/mp4";
+
+                return File(fileStream, contentType, Path.GetFileName(idPl.ToString()));
             }
             catch (Exception ex)
             {

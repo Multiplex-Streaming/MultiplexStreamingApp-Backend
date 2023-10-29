@@ -25,25 +25,26 @@ namespace Multiplex.Business.Services
 
             try 
             {
-                if (await context.HistorialPeliculas.AnyAsync(h => h.IdPl == peliculaId && h.IdUsr == userId))
+                if (!await context.HistorialPeliculas.AnyAsync(h => h.IdPl == peliculaId && h.IdUsr == userId))
                 {
-                    return "El historial de la película ya está registrado para este usuario.";
+                    context.Add(new HistorialPeliculas()
+                    {
+                        IdPl = peliculaId,
+                        IdUsr = userId
+                    });
+
+                    if (await context.SaveChangesAsync() > 0)
+                    {
+                        return "Historial de película registrado con éxito.";
+                    }
+                    else
+                    {
+                        return "No se pudo registrar el historial de película.";
+                    }
                 }
 
-                context.Add(new HistorialPeliculas()
-                {
-                    IdPl = peliculaId,
-                    IdUsr = userId
-                });
-
-                if (await context.SaveChangesAsync() > 0)
-                {
-                    return "Historial de película registrado con éxito.";
-                }
-                else
-                {
-                    return "No se pudo registrar el historial de película.";
-                }
+                return string.Empty;
+                
             }
             catch(Exception ex) 
             {

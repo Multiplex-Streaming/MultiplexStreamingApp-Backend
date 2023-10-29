@@ -16,7 +16,7 @@ namespace Multiplex.Business.Interfaces
         Task<bool> DeletePelicula(int plId);
         Task<PeliculaDTO> GetPelicula(int plId);
         Task<List<PeliculaDTO>> GetPeliculasPorGenero(int generoId);
-        Task<FileStream> GetPeliculaFile(string url);
+        Task<FileStream> GetPeliculaFile(int plId);
         Task<FileStream> GetPeliculaPortada(int plId);
     }
 }

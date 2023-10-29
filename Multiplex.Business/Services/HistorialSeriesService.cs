@@ -25,26 +25,26 @@ namespace Multiplex.Business.Services
             try 
             {
                 // Comprobar si el historial ya fue registrado
-                if (await context.HistorialSeries.AnyAsync(h => h.IdSr == serieId && h.IdUsr == userId))
+                if (!await context.HistorialSeries.AnyAsync(h => h.IdSr == serieId && h.IdUsr == userId))
                 {
-                    return "El historial de la serie ya está registrado para este usuario.";
-                }
-
-                context.Add(new HistorialSeries()
-                {
-                    IdSr = serieId,
-                    IdUsr = userId
-                });
+                    context.Add(new HistorialSeries()
+                    {
+                        IdSr = serieId,
+                        IdUsr = userId
+                    });
 
 
-                if (await context.SaveChangesAsync() > 0)
-                {
-                    return "Historial registrado con éxito.";
+                    if (await context.SaveChangesAsync() > 0)
+                    {
+                        return "Historial registrado con éxito.";
+                    }
+                    else
+                    {
+                        return "No se pudo registrar el historial.";
+                    }
                 }
-                else
-                {
-                    return "No se pudo registrar el historial.";
-                }
+
+                return string.Empty;
             }
             catch (Exception ex)
             {

@@ -40,17 +40,17 @@ namespace Multiplex.Controllers
         public async Task<IActionResult> UpdateSerie([FromForm] SerieDTO serie) =>
             Ok(await seriesService.UpdateSerie(serie));
 
-        [HttpGet("descargar/{url}")]
-        public async Task<IActionResult> DescargarSerie(string url)
+        [HttpGet("descargar/{idCap}")]
+        public async Task<IActionResult> DescargarSerie([FromRoute] int idCap)
         {
             try
             {
-                var fileStream = await seriesService.GetSerieFile(url);
+                var fileStream = await seriesService.GetSerieFile(idCap);
 
                 // Determinar el tipo de contenido según el archivo (por ejemplo, "video/mp4")
-                var contentType = "application/octet-stream";
+                var contentType = "video/mp4";
 
-                return File(fileStream, contentType, url);
+                return File(fileStream, contentType, idCap.ToString());
             }
             catch (System.Exception ex)
             {
