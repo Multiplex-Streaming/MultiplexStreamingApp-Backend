@@ -13,5 +13,10 @@ namespace Multiplex.Business.Interfaces
 
         //Retornar Capitulos
         Task<List<CapituloDTO>> GetCapitulos();
+
+        //Buscar peliculas
+        Task<List<PeliculaDTO>> SearchPelicula(string title);
+        //Buscar series
+        Task<List<SerieDTO>> SearchSerie(string title);
     }
 }

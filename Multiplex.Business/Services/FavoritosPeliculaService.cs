@@ -20,10 +20,10 @@ namespace Multiplex.Business.Services
             this.context = context;
         }
 
-        public async Task<string> CreateFavoritosPelicula(FavoritosPeliculaDTO favoritosPelicula)
+        public async Task<string> CreateFavoritosPelicula(int userId, int peliculaId )
         {
             //si el favorito ya se registro
-            if (context.FavoritosPelicula.Any(h => h.IdUsr == favoritosPelicula.IdUsr && h.IdPl == favoritosPelicula.IdPelicula))
+            if (context.FavoritosPelicula.Any(h => h.IdUsr == userId && h.IdPl == peliculaId))
             {
                 return "El favorito ya se encuentra registrado";
             }
@@ -32,8 +32,8 @@ namespace Multiplex.Business.Services
             {
                 var favoritosPeliculaEntity = new FavoritosPelicula
                 {
-                    IdUsr = favoritosPelicula.IdUsr,
-                    IdPl = favoritosPelicula.IdPelicula
+                    IdUsr = userId,
+                    IdPl = peliculaId
                 };
 
                 context.FavoritosPelicula.Add(favoritosPeliculaEntity);
@@ -47,14 +47,14 @@ namespace Multiplex.Business.Services
             }
         }
 
-        public async Task<bool> DeleteFavoritosPelicula(FavoritosPeliculaDTO favoritosPelicula)
+        public async Task<bool> DeleteFavoritosPelicula(int userId, int peliculaId)
         {
             try
             {
                 var favoritosPeliculaEntity = new FavoritosPelicula
                 {
-                    IdUsr = favoritosPelicula.IdUsr,
-                    IdPl = favoritosPelicula.IdPelicula
+                    IdUsr = userId,
+                    IdPl = peliculaId
                 };
 
                 context.FavoritosPelicula.Remove(favoritosPeliculaEntity);

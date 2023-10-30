@@ -20,15 +20,15 @@ namespace Multiplex.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveFavoritosPelicula([FromBody] FavoritosPeliculaDTO favoritosPelicula) =>
-            Ok(await favoritosPeliculaService.CreateFavoritosPelicula(favoritosPelicula));
+        public async Task<IActionResult> SaveFavoritosPelicula([FromQuery] int peliculaId) =>
+            Ok(await favoritosPeliculaService.CreateFavoritosPelicula(userId, peliculaId));
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteFavoritosPelicula([FromBody] FavoritosPeliculaDTO favoritosPelicula) =>
-            Ok(await favoritosPeliculaService.DeleteFavoritosPelicula(favoritosPelicula));
+        public async Task<IActionResult> DeleteFavoritosPelicula([FromQuery] int peliculaId) =>
+            Ok(await favoritosPeliculaService.DeleteFavoritosPelicula(userId, peliculaId));
 
         [HttpGet]
-        public async Task<IActionResult> GetFavoritosPelicula([FromQuery] int idUsr) =>
-            Ok(await favoritosPeliculaService.GetFavoritosPelicula(idUsr));
+        public async Task<IActionResult> GetFavoritosPelicula() =>
+            Ok(await favoritosPeliculaService.GetFavoritosPelicula(userId));
     }
 }

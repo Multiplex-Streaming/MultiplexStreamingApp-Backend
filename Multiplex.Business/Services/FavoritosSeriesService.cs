@@ -20,9 +20,9 @@ namespace Multiplex.Business.Services
             this.context = context;
         }
 
-        public async Task<string> CreateFavoritosSeries(FavoritosSeriesDTO favoritosSeries)
+        public async Task<string> CreateFavoritosSeries(int userId, int serieId)
         {
-            if (context.FavoritosSeries.Any(h => h.IdUsr == favoritosSeries.IdUsr && h.IdSr == favoritosSeries.IdSerie))
+            if (context.FavoritosSeries.Any(h => h.IdUsr == userId && h.IdSr == serieId))
             {
                 return "El favorito ya se encuentra registrado";
             }
@@ -31,8 +31,8 @@ namespace Multiplex.Business.Services
             {
                 var favoritosSeriesEntity = new FavoritosSeries
                 {
-                    IdUsr = favoritosSeries.IdUsr,
-                    IdSr = favoritosSeries.IdSerie
+                    IdUsr = userId,
+                    IdSr = serieId
                 };
 
                 context.FavoritosSeries.Add(favoritosSeriesEntity);
@@ -46,14 +46,14 @@ namespace Multiplex.Business.Services
             }
         }
 
-        public async Task<bool> DeleteFavoritosSeries(FavoritosSeriesDTO favoritosSeries)
+        public async Task<bool> DeleteFavoritosSeries(int userId, int serieId)
         {
             try
             {
                 var favoritosSeriesEntity = new FavoritosSeries
                 {
-                    IdUsr = favoritosSeries.IdUsr,
-                    IdSr = favoritosSeries.IdSerie
+                    IdUsr = userId,
+                    IdSr = serieId
                 };
 
                 context.FavoritosSeries.Remove(favoritosSeriesEntity);
