@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Multiplex.Business.DTOs
+{
+    public class GetPagosDTO
+    {
+        public int IdPago { get; set; }
+        public DateTime FechaPago { get; set; }
+        public bool IsPagado { get; set; }
+        public decimal Total { get; set; }
+    }
+}

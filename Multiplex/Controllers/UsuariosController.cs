@@ -13,7 +13,7 @@ namespace Multiplex.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class UsuariosController : BaseController
     {
         private readonly IUsuariosService usuariosService;
@@ -36,5 +36,8 @@ namespace Multiplex.Controllers
 
         [HttpPut("update-abonado-status")]
         public async Task<IActionResult> UpdateAbonadoStatus([FromBody] UpdateAbonadoStatusDTO updateAbonadoStatus) => Ok(await usuariosService.UpdateAbonadoStatus(updateAbonadoStatus.AbonadoId, updateAbonadoStatus.NuevoEstado));
+
+        [HttpGet("Abonados-y-pagos")]
+        public async Task<IActionResult> GetAllUsuariosConPagos() => Ok(await usuariosService.GetAbonadosConPagos());
     }
 }
