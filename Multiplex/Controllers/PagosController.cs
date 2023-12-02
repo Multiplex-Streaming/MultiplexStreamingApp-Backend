@@ -43,5 +43,11 @@ namespace Multiplex.Controllers
 
             return Ok(await pagosService.UpdatePagoAsync(id, pago));
         }
+
+        [HttpGet("notificar-abonados-con-pagos-pendientes")]
+        public async Task<IActionResult> NotificarAbonadosConPagosPendientes()
+        {
+            return Ok(await pagosService.NotificarAbonadosConPagosPendientes());
+        }
     }
 }

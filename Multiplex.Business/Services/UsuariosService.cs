@@ -123,6 +123,7 @@ namespace Multiplex.Business.Services
             return true;
         }
 
+        //Metodo para obtener todos los usuarios y sus pagos
         public async Task<List<UsuarioConPagosDTO>> GetAbonadosConPagos()
         {
             var abonadosConPagos = await context.Usuarios
@@ -147,6 +148,5 @@ namespace Multiplex.Business.Services
                 })
                 .ToList();
         }
-
     }
 }

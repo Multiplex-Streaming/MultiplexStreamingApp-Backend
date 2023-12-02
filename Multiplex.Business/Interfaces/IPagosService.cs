@@ -12,5 +12,6 @@ namespace Multiplex.Business.Interfaces
     {
         Task<int> AddPagoAsync(PagoDTO pago);
         Task<bool> UpdatePagoAsync(int id, PagoDTO pago);
+        Task<bool> NotificarAbonadosConPagosPendientes();
     }
 }
