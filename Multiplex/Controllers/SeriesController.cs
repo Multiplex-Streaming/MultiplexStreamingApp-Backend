@@ -40,17 +40,17 @@ namespace Multiplex.Controllers
         public async Task<IActionResult> UpdateSerie([FromForm] SerieDTO serie) =>
             Ok(await seriesService.UpdateSerie(serie));
 
-        [HttpGet("descargar/{url}")]
-        public async Task<IActionResult> DescargarSerie(string url)
+        [HttpGet("descargar/{idCap}")]
+        public async Task<IActionResult> DescargarSerie([FromRoute] int idCap)
         {
             try
             {
-                var fileStream = await seriesService.GetSerieFile(url);
+                var fileStream = await seriesService.GetSerieFile(idCap);
 
                 // Determinar el tipo de contenido según el archivo (por ejemplo, "video/mp4")
-                var contentType = "application/octet-stream";
+                var contentType = "video/mp4";
 
-                return File(fileStream, contentType, url);
+                return File(fileStream, contentType, idCap.ToString());
             }
             catch (System.Exception ex)
             {
@@ -93,5 +93,20 @@ namespace Multiplex.Controllers
         public async Task<IActionResult> DeleteCapitulo([FromRoute] int cpId) =>
             Ok(await seriesService.DeleteCapitulo(cpId));
 
+        [HttpGet("capitulo/portada/{cpId}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetCapituloPortada([FromRoute] int cpId)
+        {
+            try
+            {
+                FileStream fileStream = await seriesService.GetCapituloPortada(cpId);
+                string contentType = "application/octet-stream";
+                return File(fileStream, contentType, $"capitulo{cpId}");
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

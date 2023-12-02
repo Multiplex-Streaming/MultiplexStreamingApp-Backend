@@ -9,8 +9,8 @@ namespace Multiplex.Business.Interfaces
 {
     public interface IFavoritosSeriesService
     {
-        Task<string> CreateFavoritosSeries(FavoritosSeriesDTO favoritosSeries);
-        Task<bool> DeleteFavoritosSeries(FavoritosSeriesDTO favoritosSeries);
+        Task<string> CreateFavoritosSeries(int userId, int serieId);
+        Task<bool> DeleteFavoritosSeries(int userId, int serieId);
         Task<IEnumerable<SerieDTO>> GetFavoritosSeries(int idUsr);
     }
 }

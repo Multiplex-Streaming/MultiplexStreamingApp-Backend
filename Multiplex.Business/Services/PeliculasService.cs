@@ -178,14 +178,18 @@ namespace Multiplex.Business.Services
                 Titulo = x.IdPlNavigation.DescripcionPl
             }).ToListAsync();
 
-        public async Task<FileStream> GetPeliculaFile(string url)
+        public async Task<FileStream> GetPeliculaFile(int idPl)
         {
-            string tempFolderPath = Path.Combine(Path.GetTempPath(), "PeliculasTemp");
-            string tempFilePath = Path.Combine(tempFolderPath, url);
-            if (!File.Exists(tempFilePath))
+            var pelicula = await context.Peliculas.Where(x => x.IdPl == idPl)
+                .Select(x => new PeliculaDTO()
+                {
+                    Url = x.UrlPl
+                })
+                .FirstOrDefaultAsync();
+            if (!File.Exists(pelicula.Url))
                 throw new Exception("No se encontró la película");
 
-            return new FileStream(tempFilePath, FileMode.Open);
+            return new FileStream(pelicula.Url, FileMode.Open);
         }
         public async Task<FileStream> GetPeliculaPortada(int plId)
         {

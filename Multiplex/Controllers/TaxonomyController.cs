@@ -28,5 +28,14 @@ namespace Multiplex.Controllers
         //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         [HttpGet("capitulos")]
         public async Task<IActionResult> GetCapitulos() => Ok(await taxonomyService.GetCapitulos());
+
+        //Busqueda
+        [HttpGet("pelicula")]
+        public async Task<IActionResult> SearchPl ([FromQuery] string title) =>
+            Ok(await taxonomyService.SearchPelicula(title));
+        
+        [HttpGet("serie")]
+        public async Task<IActionResult> SearchSr([FromQuery] string title) =>
+            Ok(await taxonomyService.SearchSerie(title));
     }
 }

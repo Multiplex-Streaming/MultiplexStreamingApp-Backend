@@ -34,5 +34,6 @@ namespace Multiplex.Domain.Models
         public virtual ICollection<FavoritosSeries> FavoritosSeries { get; set; }
         public virtual ICollection<HistorialPeliculas> HistorialPeliculas { get; set; }
         public virtual ICollection<HistorialSeries> HistorialSeries { get; set; }
+        public virtual ICollection<UsuariosPagos> UsuariosPagos { get; set; }
     }
 }

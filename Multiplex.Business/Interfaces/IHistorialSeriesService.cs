@@ -9,9 +9,9 @@ namespace Multiplex.Business.Interfaces
 {
     public interface IHistorialSeriesService
     {
-        Task<string> CreateHistorialSerie(HistorialSeriesDTO historialSerie);
+        Task<string> CreateHistorialSerie(int userId, int serieId);
         Task<IEnumerable<SerieDTO>> GetHistorialSeries(int idUsr);
-        Task<bool> DeleteHistorialSerie(HistorialSeriesDTO historialSerie);
+        Task<bool> DeleteHistorialSerie(int idUsr, int serieId);
         Task<IEnumerable<SerieDTO>> GetRecomendaciones(int idUsr);
     }
 }

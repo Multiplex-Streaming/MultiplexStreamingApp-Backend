@@ -19,28 +19,38 @@ namespace Multiplex.Business.Services
         {
             this.context = context;
         }
-        
-        public async Task<string> CreateHistorialPelicula(HistorialPeliculasDTO historialPelicula)
+
+        public async Task<string> CreateHistorialPelicula(int userId, int peliculaId)
         {
-            if (await context.HistorialPeliculas.AnyAsync(h => h.IdPl == historialPelicula.IdPl && h.IdUsr == historialPelicula.IdUsr))
-            {
-                return "El historial de la película ya está registrado para este usuario.";
-            }
 
-            context.Add(new HistorialPeliculas()
+            try 
             {
-                IdPl = historialPelicula.IdPl,
-                IdUsr = historialPelicula.IdUsr
-            });
+                if (!await context.HistorialPeliculas.AnyAsync(h => h.IdPl == peliculaId && h.IdUsr == userId))
+                {
+                    context.Add(new HistorialPeliculas()
+                    {
+                        IdPl = peliculaId,
+                        IdUsr = userId
+                    });
 
-            if (await context.SaveChangesAsync() > 0)
-            {
-                return "Historial de película registrado con éxito.";
+                    if (await context.SaveChangesAsync() > 0)
+                    {
+                        return "Historial de película registrado con éxito.";
+                    }
+                    else
+                    {
+                        return "No se pudo registrar el historial de película.";
+                    }
+                }
+
+                return string.Empty;
+                
             }
-            else
+            catch(Exception ex) 
             {
-                return "No se pudo registrar el historial de película.";
+                throw new Exception(ex.ToString());
             }
+            
         }
 
         //obtener el historial de ese usuario
@@ -62,17 +72,24 @@ namespace Multiplex.Business.Services
             return historialPeliculas;
         }
 
-        public async Task<bool> DeleteHistorialPelicula(HistorialPeliculasDTO historialPelicula)
+        public async Task<bool> DeleteHistorialPelicula(int peliculaId, int idUsr)
         {
-            var existingHistorialPelicula = await context.HistorialPeliculas.FindAsync(historialPelicula.IdPl);
-            if (existingHistorialPelicula == null)
+            try 
             {
-                return false;
+                var existingHistorialPelicula = await context.HistorialPeliculas.FindAsync(peliculaId, idUsr);
+                if (existingHistorialPelicula == null)
+                {
+                    return false;
+                }
+
+                context.HistorialPeliculas.Remove(existingHistorialPelicula);
+
+                return await context.SaveChangesAsync() > 0;
+            }catch (Exception ex) 
+            {
+                throw new Exception(ex.ToString());
             }
-
-            context.HistorialPeliculas.Remove(existingHistorialPelicula);
-
-            return await context.SaveChangesAsync() > 0;
+            
         }
 
         public async Task<IEnumerable<PeliculaDTO>> GetRecomendaciones(int idUsr)
@@ -107,5 +124,35 @@ namespace Multiplex.Business.Services
             return recomendaciones;
         }
 
+        public async Task<bool> UpdateHistorial(int idUser, int idPl, int minutos, int segundos)
+        {
+            var historial = await context.HistorialPeliculas.Where(x => x.IdPl == idPl && x.IdUsr == idUser)
+                .FirstOrDefaultAsync();
+            historial.Minutos =  Convert.ToInt16(minutos);
+            historial.Segundos = Convert.ToInt16(segundos);
+            context.HistorialPeliculas.Update(historial);
+            return await context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<HistorialPeliculasDTO> GetHistorialPelicula(int idUsr, int idPl)
+        {
+            try
+            {
+                return await context.HistorialPeliculas.Where(x => x.IdPl == idPl && x.IdUsr == idUsr)
+                   .Select(x => new HistorialPeliculasDTO()
+                   {
+                       IdPl = x.IdPl,
+                       IdUsr = x.IdUsr,
+                       Minutos = x.Minutos ?? 0,
+                       Segundos = x.Segundos ?? 0
+                   })
+                   .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+           
+        }
     }
 }

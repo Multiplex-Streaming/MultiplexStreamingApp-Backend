@@ -109,7 +109,6 @@ namespace Multiplex.Business.Services
             })
             .FirstOrDefault();
 
-
         public async Task<bool> UpdateAbonadoStatus(int abonadoId, string nuevoEstado)
         {
             var abonado = await context.Usuarios.Where(x => x.IdUsr == abonadoId).FirstOrDefaultAsync();
@@ -122,6 +121,32 @@ namespace Multiplex.Business.Services
             context.Update(abonado);
             await context.SaveChangesAsync();
             return true;
+        }
+
+        //Metodo para obtener todos los usuarios y sus pagos
+        public async Task<List<UsuarioConPagosDTO>> GetAbonadosConPagos()
+        {
+            var abonadosConPagos = await context.Usuarios
+                .Where(u => u.IdTcNavigation.DescripcionTc == TiposCuentasEnum.ABONADO)
+                .Include(u => u.UsuariosPagos)
+                .ThenInclude(up => up.Pago)
+                .ToListAsync();
+
+            return abonadosConPagos
+                .Select(u => new UsuarioConPagosDTO
+                {
+                    UsuarioId = u.IdUsr,
+                    NombreCompleto = $"{u.ApellidoUsr} {u.NombreUsr}",
+                    Correo = u.CorreoUsr,
+                    Pagos = u.UsuariosPagos.Select(up => new GetPagosDTO
+                    {
+                        IdPago = up.Pago.IdPago,
+                        FechaPago = up.Pago.FechaPago,
+                        IsPagado = up.Pago.IsPagado,
+                        Total = up.Pago.Total
+                    }).ToList()
+                })
+                .ToList();
         }
     }
 }

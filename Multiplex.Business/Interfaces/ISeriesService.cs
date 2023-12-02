@@ -15,7 +15,7 @@ namespace Multiplex.Business.Interfaces
         Task<bool> UpdateSerie(SerieDTO serie);
         Task<bool> DeleteSerie(int IdSr);
         Task<SerieDTO> GetSerie(int IdSr);
-        Task<FileStream> GetSerieFile(string url);
+        Task<FileStream> GetSerieFile(int idCap);
         Task<FileStream> GetSeriePortada(int SrId);
 
         //Capitulos
@@ -24,5 +24,6 @@ namespace Multiplex.Business.Interfaces
         Task<bool> DeleteCapitulo(int cpId);
         //Task<FileStream> GetCapituloFile(string url);
         //Task<FileStream> GetCapituloPortada(int SrId);
+        Task<FileStream> GetCapituloPortada(int cpId);
     }
 }

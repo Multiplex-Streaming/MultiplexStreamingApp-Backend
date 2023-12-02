@@ -9,7 +9,7 @@ namespace Multiplex.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class FavoritosSeriesController : BaseController
     {
         private readonly IFavoritosSeriesService favoritosSeriesService;
@@ -20,16 +20,16 @@ namespace Multiplex.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveFavoritosSerie([FromBody] FavoritosSeriesDTO favoritosSerie) =>
-            Ok(await favoritosSeriesService.CreateFavoritosSeries(favoritosSerie));
+        public async Task<IActionResult> SaveFavoritosSerie([FromQuery] int serieId) =>
+            Ok(await favoritosSeriesService.CreateFavoritosSeries(userId, serieId));
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteFavoritosSerie([FromBody] FavoritosSeriesDTO favoritosSerie) =>
-            Ok(await favoritosSeriesService.DeleteFavoritosSeries(favoritosSerie));
+        public async Task<IActionResult> DeleteFavoritosSerie([FromQuery] int serieId) =>
+            Ok(await favoritosSeriesService.DeleteFavoritosSeries(userId, serieId));
 
         [HttpGet]
-        public async Task<IActionResult> GetFavoritosSerie([FromQuery] int idUsr) =>
-            Ok(await favoritosSeriesService.GetFavoritosSeries(idUsr));
+        public async Task<IActionResult> GetFavoritosSerie() =>
+            Ok(await favoritosSeriesService.GetFavoritosSeries(userId));
 
     }
 }
