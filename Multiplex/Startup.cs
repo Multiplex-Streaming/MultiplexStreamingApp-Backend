@@ -144,6 +144,7 @@ namespace Multiplex
             services.AddTransient<IFavoritosPeliculaService, FavoritosPeliculaService>();
             services.AddTransient<IFavoritosSeriesService, FavoritosSeriesService>();
             services.AddTransient<IMetricasService, MetricasService>();
+            services.AddTransient<IPagosService, PagosService>();
         }
     }
 }

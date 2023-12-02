@@ -136,15 +136,23 @@ namespace Multiplex.Business.Services
 
         public async Task<HistorialPeliculasDTO> GetHistorialPelicula(int idUsr, int idPl)
         {
-            return await context.HistorialPeliculas.Where(x => x.IdPl == idPl && x.IdUsr == idUsr)
-                .Select(x => new HistorialPeliculasDTO()
-                {
-                    IdPl = x.IdPl,
-                    IdUsr = x.IdUsr,
-                    Minutos = x.Minutos ?? 0,
-                    Segundos = x.Segundos ?? 0
-                })
-                .FirstOrDefaultAsync();
+            try
+            {
+                return await context.HistorialPeliculas.Where(x => x.IdPl == idPl && x.IdUsr == idUsr)
+                   .Select(x => new HistorialPeliculasDTO()
+                   {
+                       IdPl = x.IdPl,
+                       IdUsr = x.IdUsr,
+                       Minutos = x.Minutos ?? 0,
+                       Segundos = x.Segundos ?? 0
+                   })
+                   .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
+            }
+           
         }
     }
 }
