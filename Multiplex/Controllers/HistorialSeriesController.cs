@@ -31,8 +31,8 @@ namespace Multiplex.Controllers
         public async Task<IActionResult> DeleteHistorialSerie([FromQuery] int serieId) =>
             Ok(await historialSeriesService.DeleteHistorialSerie(userId, serieId));
 
-        [HttpGet("recomendaciones/{idUsr}")]
-        public async Task<IActionResult> GetRecomendaciones([FromRoute] int idUsr) =>
-            Ok(await historialSeriesService.GetRecomendaciones(idUsr)); 
+        [HttpGet("recomendaciones")]
+        public async Task<IActionResult> GetRecomendaciones() =>
+            Ok(await historialSeriesService.GetRecomendaciones(userId));
     }
 }

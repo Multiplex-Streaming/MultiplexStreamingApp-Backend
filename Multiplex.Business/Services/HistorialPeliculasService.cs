@@ -128,10 +128,14 @@ namespace Multiplex.Business.Services
         {
             var historial = await context.HistorialPeliculas.Where(x => x.IdPl == idPl && x.IdUsr == idUser)
                 .FirstOrDefaultAsync();
-            historial.Minutos =  Convert.ToInt16(minutos);
-            historial.Segundos = Convert.ToInt16(segundos);
-            context.HistorialPeliculas.Update(historial);
-            return await context.SaveChangesAsync() > 0;
+            if (historial != null)
+            {
+                historial.Minutos = Convert.ToInt16(minutos);
+                historial.Segundos = Convert.ToInt16(segundos);
+                context.HistorialPeliculas.Update(historial);
+                return await context.SaveChangesAsync() > 0;
+            }
+            return false;
         }
 
         public async Task<HistorialPeliculasDTO> GetHistorialPelicula(int idUsr, int idPl)
