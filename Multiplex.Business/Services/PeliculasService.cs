@@ -20,7 +20,7 @@ namespace Multiplex.Business.Services
         private readonly MultiplexContext context;
         private readonly ILogger logger;
         private readonly IConfiguration _configuration;
-        private string _peliculasTemp = "PeliculasTemp";
+        private string _peliculasTemp = "videos";
         public PeliculasService(MultiplexContext context, ILogger<UsuariosService> logger, IConfiguration configuration)
         {
             this.context = context;

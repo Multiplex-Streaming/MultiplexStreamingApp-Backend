@@ -22,7 +22,7 @@ namespace Multiplex.Business.Services
         private readonly MultiplexContext context;
         private readonly ILogger logger;
         private readonly IConfiguration _configuration;
-        private string _seriesTemp = "SeriesTemp";
+        private string _seriesTemp = "series";
 
         public SeriesService(MultiplexContext context, ILogger<UsuariosService> logger, IConfiguration configuration)
         {
