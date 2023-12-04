@@ -13,7 +13,7 @@ namespace Multiplex.Business.Helpers
 {
     public static class ArchivosHelper
     {
-        private const string folder = "C:\\Users\\cesar\\source\\repos\\MultiplexStreamingApp-Frontend\\Multiplex-Streaming\\src\\assets\\";
+        private const string folder = "C:\\Users\\sabri\\OneDrive\\Desktop\\tecnicatura\\Proyecto-Tesis\\MultiplexStreamingApp-Frontend\\Multiplex-Streaming\\src";
         public static async Task<bool> BorrarArchivo(string fileName, string path)
         {
             if(string.IsNullOrEmpty(fileName)) return false;

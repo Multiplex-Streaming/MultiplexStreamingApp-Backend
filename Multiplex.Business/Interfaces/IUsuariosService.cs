@@ -15,5 +15,6 @@ namespace Multiplex.Business.Interfaces
         Task<bool> ChangePassword(ChangePasswordDTO changePasswordInfo);
         Task<bool> UpdateAbonadoStatus(int abonadoId, string nuevoEstado);
         Task<List<UsuarioConPagosDTO>> GetAbonadosConPagos();
+        Task<List<AbonadosHabilitadosDTO>> GetAbonadosHabilidatos();
     }
 }
