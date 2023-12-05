@@ -12,7 +12,7 @@ namespace Multiplex.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class PagosController : BaseController
     {
         private readonly IPagosService pagosService;
@@ -22,15 +22,15 @@ namespace Multiplex.Controllers
             this.pagosService = pagosService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddPago([FromBody] PagoDTO pago)
+        [HttpPost("{id}")]
+        public async Task<IActionResult> AddPago([FromRoute] int id, [FromBody] CrearPagoDTO pago)
         {
             if (pago == null)
             {
                 return BadRequest("Invalid payload");
             }
 
-            return Ok(await pagosService.AddPagoAsync(pago));
+            return Ok(await pagosService.AddPagoAsync(id, pago));
         }
 
         [HttpPut("{id}")]

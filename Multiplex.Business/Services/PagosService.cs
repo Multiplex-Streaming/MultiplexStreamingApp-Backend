@@ -27,14 +27,14 @@ namespace Multiplex.Business.Services
             this.emailSender = emailSender;
             this.usuariosService = usuariosService;
         }
-        public async Task<int> AddPagoAsync(PagoDTO pago)
+        public async Task<int> AddPagoAsync(int abonadoId, CrearPagoDTO pago)
         {
             // Obtener el usuario correspondiente
-            var usuario = await context.Usuarios.FindAsync(pago.IdUsuario);
+            var usuario = await context.Usuarios.FindAsync(abonadoId);
 
             if (usuario == null)
             {
-                throw new InvalidOperationException($"Usuario con ID {pago.IdUsuario} no encontrado.");
+                throw new InvalidOperationException($"Usuario con ID {abonadoId} no encontrado.");
             }
 
             //mappera el pagoDto a un pago
@@ -48,7 +48,7 @@ namespace Multiplex.Business.Services
             await context.SaveChangesAsync();
 
             UsuariosPagos usuariosPagos = new UsuariosPagos();
-            usuariosPagos.IdUsr = pago.IdUsuario;
+            usuariosPagos.IdUsr = abonadoId;
             usuariosPagos.IdPago = pagoId.Entity.IdPago;
 
             // Agregar el pago al usuario
@@ -58,15 +58,15 @@ namespace Multiplex.Business.Services
             return pagoId.Entity.IdPago;
         }
 
-        public async Task<bool> UpdatePagoAsync(int id, PagoDTO pago)
+        public async Task<bool> UpdatePagoAsync(int abonadoId, PagoDTO pago)
         {
             try
             {
-                var pagoToUpdate = await context.Pagos.FindAsync(id);
+                var pagoToUpdate = await context.Pagos.FindAsync(pago.idPago);
 
                 if (pagoToUpdate == null)
                 {
-                    throw new InvalidOperationException($"Pago con ID {id} no encontrado.");
+                    throw new InvalidOperationException($"Pago con ID {pago.idPago} no encontrado.");
                 }
 
                 // Recargar la entidad desde la base de datos
@@ -75,7 +75,7 @@ namespace Multiplex.Business.Services
                 // Verificar si la entidad todavía existe después de recargar
                 if (pagoToUpdate == null)
                 {
-                    throw new InvalidOperationException($"Pago con ID {id} no encontrado después de recargar.");
+                    throw new InvalidOperationException($"Pago con ID {pago.idPago} no encontrado después de recargar.");
                 }
 
                 // Actualizar la entidad
@@ -93,7 +93,7 @@ namespace Multiplex.Business.Services
             }
             catch (Exception e)
             {
-                logger.LogError(e, $"Error al actualizar el pago con ID {id}.");
+                logger.LogError(e, $"Error al actualizar el pago con ID {pago.idPago}.");
                 return false;
             }
         }
