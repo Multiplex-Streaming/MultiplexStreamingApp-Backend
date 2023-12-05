@@ -13,7 +13,7 @@ namespace Multiplex.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class UsuariosController : BaseController
     {
         private readonly IUsuariosService usuariosService;
@@ -39,5 +39,8 @@ namespace Multiplex.Controllers
 
         [HttpGet("Abonados-y-pagos")]
         public async Task<IActionResult> GetAllUsuariosConPagos() => Ok(await usuariosService.GetAbonadosConPagos());
+
+        [HttpGet("habitados")]
+        public async Task<IActionResult> GetAbonadosHabilitados() => Ok(await usuariosService.GetAbonadosHabilidatos());
     }
 }

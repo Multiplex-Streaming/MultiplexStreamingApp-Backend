@@ -13,12 +13,13 @@ namespace Multiplex.Business.Helpers
 {
     public static class ArchivosHelper
     {
+        private const string folder = "C:\\Users\\sabri\\OneDrive\\Desktop\\tecnicatura\\Proyecto-Tesis\\MultiplexStreamingApp-Frontend\\Multiplex-Streaming\\src";
         public static async Task<bool> BorrarArchivo(string fileName, string path)
         {
             if(string.IsNullOrEmpty(fileName)) return false;
             try
             {
-                var tempFolderPath = Path.Combine(Path.GetTempPath(), path);
+                var tempFolderPath = Path.Combine(folder, path);
                 var prevTempFilePath = Path.Combine(tempFolderPath, fileName);
                 if (File.Exists(prevTempFilePath))
                     File.Delete(prevTempFilePath);
@@ -36,7 +37,8 @@ namespace Multiplex.Business.Helpers
 
             try
             {
-                var tempFolderPath = Path.Combine(Path.GetTempPath(), path);
+                //Path.GetTempPath
+                var tempFolderPath = Path.Combine(folder, path);
                 if (!Directory.Exists(tempFolderPath))
                     Directory.CreateDirectory(tempFolderPath);
 

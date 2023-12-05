@@ -22,7 +22,7 @@ namespace Multiplex.Business.Services
         private readonly MultiplexContext context;
         private readonly ILogger logger;
         private readonly IConfiguration _configuration;
-        private string _seriesTemp = "SeriesTemp";
+        private string _seriesTemp = "series";
 
         public SeriesService(MultiplexContext context, ILogger<UsuariosService> logger, IConfiguration configuration)
         {
@@ -224,41 +224,50 @@ namespace Multiplex.Business.Services
         //Capitlos logica>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         public async Task<bool> CreateCapitulo(CapituloDTO capitulo)
         {
-            //Verificar que la serie exista
-            var serie = await GetSerie(capitulo.IdSr);
-            if(serie == null)
-                return false;
-
-            long maxAllowedContentLength = _configuration.GetValue<long>("RequestLimits:MaxAllowedContentLength");
-
-            if (capitulo.file?.Length > maxAllowedContentLength)
-                throw new Exception("El tamaño del archivo supera el límite permitido");
-
-            if (capitulo.portadaFile?.Length > maxAllowedContentLength)
-                throw new Exception("El tamaño del archivo supera el límite permitido");
-            
-            string tempFileName = "", tempPortadaFileName = "";
-
-            if (capitulo.file != null)
-                tempFileName = await ArchivosHelper.GuardarArchivo(capitulo.file, _seriesTemp);
-            if (capitulo.portadaFile != null)
-                tempPortadaFileName = await ArchivosHelper.GuardarArchivo(capitulo.portadaFile, _seriesTemp);
-
-            //Crear la entidad del capitulo en la bd
-            var newCapitulo = new CapituloSerie
+            try
             {
-                IdSr = capitulo.IdSr,
-                //IdCp = capitulo.IdCp,
-                NombreCp = capitulo.NombreCp,
-                DescripcionCp = capitulo.DescripcionCp,
-                DuracionCp = capitulo.DuracionCp,
-                TemporadaCp = capitulo.Temporada.ToString(),
-                UrlCp = tempFileName,
-                PortadaCp = tempPortadaFileName,
-            };
+                //Verificar que la serie exista
+                var serie = await GetSerie(capitulo.IdSr);
+                if (serie == null)
+                    return false;
 
-            context.CapituloSerie.Add(newCapitulo);
-            return await context.SaveChangesAsync() > 0;
+                long maxAllowedContentLength = _configuration.GetValue<long>("RequestLimits:MaxAllowedContentLength");
+
+                if (capitulo.file?.Length > maxAllowedContentLength)
+                    throw new Exception("El tamaño del archivo supera el límite permitido");
+
+                if (capitulo.portadaFile?.Length > maxAllowedContentLength)
+                    throw new Exception("El tamaño del archivo supera el límite permitido");
+
+                string tempFileName = "", tempPortadaFileName = "";
+
+                if (capitulo.file != null)
+                    tempFileName = await ArchivosHelper.GuardarArchivo(capitulo.file, _seriesTemp);
+                if (capitulo.portadaFile != null)
+                    tempPortadaFileName = await ArchivosHelper.GuardarArchivo(capitulo.portadaFile, _seriesTemp);
+
+                //Crear la entidad del capitulo en la bd
+                var newCapitulo = new CapituloSerie
+                {
+                    IdSr = capitulo.IdSr,
+                    //IdCp = capitulo.IdCp,
+                    NombreCp = capitulo.NombreCp,
+                    DescripcionCp = capitulo.DescripcionCp,
+                    DuracionCp = capitulo.DuracionCp,
+                    TemporadaCp = capitulo.Temporada.ToString(),
+                    UrlCp = tempFileName,
+                    PortadaCp = tempPortadaFileName,
+                };
+
+                context.CapituloSerie.Add(newCapitulo);
+                return await context.SaveChangesAsync() > 0;
+            }
+            catch(Exception e)
+            {
+
+                throw new Exception(e.ToString());
+            }
+            
         }
 
         public async Task<bool> UpdateCapitulo(CapituloDTO capitulo)

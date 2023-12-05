@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Multiplex.Business.DTOs
 {
-    public class PagoDTO
+    public class CrearPagoDTO
     {
-        public int idPago { get; set; }
         public DateTime FechaPago { get; set; }
         public bool IsPagado { get; set; }
         public decimal Total { get; set; }

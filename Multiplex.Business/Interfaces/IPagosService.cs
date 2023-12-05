@@ -10,8 +10,8 @@ namespace Multiplex.Business.Interfaces
 {
     public interface IPagosService
     {
-        Task<int> AddPagoAsync(PagoDTO pago);
-        Task<bool> UpdatePagoAsync(int id, PagoDTO pago);
+        Task<int> AddPagoAsync(int abonadoId, CrearPagoDTO pago);
+        Task<bool> UpdatePagoAsync(int abonadoId, PagoDTO pago);
         Task<bool> NotificarAbonadosConPagosPendientes();
     }
 }

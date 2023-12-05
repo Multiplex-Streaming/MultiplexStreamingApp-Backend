@@ -148,5 +148,21 @@ namespace Multiplex.Business.Services
                 })
                 .ToList();
         }
+
+        public async Task<List<AbonadosHabilitadosDTO>> GetAbonadosHabilidatos()
+        {
+            var abonadosHabilitados = await context.Usuarios
+                .Where(u => u.IdTcNavigation.DescripcionTc == TiposCuentasEnum.ABONADO &&
+                                           u.IdEcNavigation.DescripcionEc == EstadosCuentasEnum.HABILITADO)
+                .ToListAsync();
+
+            return abonadosHabilitados
+                .Select(u => new AbonadosHabilitadosDTO
+                {
+                    Id = u.IdUsr,
+                    Name = $"{u.ApellidoUsr} {u.NombreUsr}",
+                })
+                .ToList();
+        }
     }
 }

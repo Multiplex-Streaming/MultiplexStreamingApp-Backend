@@ -22,15 +22,15 @@ namespace Multiplex.Controllers
             this.pagosService = pagosService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddPago([FromBody] PagoDTO pago)
+        [HttpPost("{id}")]
+        public async Task<IActionResult> AddPago([FromRoute] int id, [FromBody] CrearPagoDTO pago)
         {
             if (pago == null)
             {
                 return BadRequest("Invalid payload");
             }
 
-            return Ok(await pagosService.AddPagoAsync(pago));
+            return Ok(await pagosService.AddPagoAsync(id, pago));
         }
 
         [HttpPut("{id}")]
