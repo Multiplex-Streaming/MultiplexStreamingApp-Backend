@@ -12,7 +12,7 @@ namespace Multiplex.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class PagosController : BaseController
     {
         private readonly IPagosService pagosService;
