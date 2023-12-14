@@ -18,5 +18,6 @@ namespace Multiplex.Business.DTOs
         public IFormFile file { get; set; }
         public string Portada { get; set; }
         public IFormFile portadaFile { get; set; }
+        public List<int> GenerosSerie { get; set; }
     }
 }
