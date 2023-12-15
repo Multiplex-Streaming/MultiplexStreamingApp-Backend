@@ -11,7 +11,7 @@ namespace Multiplex.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class SeriesController : Controller
     {
         private readonly ISeriesService seriesService;

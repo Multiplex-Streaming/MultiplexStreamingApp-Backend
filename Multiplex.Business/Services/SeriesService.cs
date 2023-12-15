@@ -122,6 +122,10 @@ namespace Multiplex.Business.Services
                     CantCapitulosSr = serie.CantidadCapitulos,
                     PortadaSr = tempPortadaFileName,
                     UrlSr = tempFileName,
+                    GenerosSeries = serie.GenerosSerie.Select(x => new GenerosSeries()
+                    {
+                        IdGn = x
+                    }).ToHashSet()
                 };
 
                 context.Series.Add(serieEntity);
@@ -167,33 +171,53 @@ namespace Multiplex.Business.Services
 
         public async Task<bool> UpdateSerie(SerieDTO serie)
         {
-            var serieEntity = await context.Series.Include(s => s.CapituloSerie)
-                                                  .FirstOrDefaultAsync(s => s.IdSr == serie.Id);
-
-            if (serieEntity == null)
+            try
             {
-                return false; // Serie not found
+                var serieEntity = await context.Series
+                    .Include(s => s.CapituloSerie)
+                    .Include(s => s.GenerosSeries)
+                    .FirstOrDefaultAsync(s => s.IdSr == serie.Id);
+
+                if (serieEntity == null)
+                {
+                    return false; // Serie not found
+                }
+
+                long maxAllowedContentLength = _configuration.GetValue<long>("RequestLimits:MaxAllowedContentLength");
+
+                string tempPortadaFileName = "";
+
+                if (serie.portadaFile != null)
+                {
+                    await ArchivosHelper.BorrarArchivo(serieEntity.PortadaSr, _seriesTemp);
+                    tempPortadaFileName = await ArchivosHelper.GuardarArchivo(serie.portadaFile, _seriesTemp);
+                    serieEntity.PortadaSr = tempPortadaFileName;
+                }
+
+                // Update serie properties
+                serieEntity.NombreSr = serie.Nombre;
+                serieEntity.DescripcionSr = serie.Descripcion;
+                serieEntity.CantCapitulosSr = serie.CantidadCapitulos;
+                serieEntity.UrlSr = serie.Url;
+
+                // Remove and add related genres
+                if (serieEntity.GenerosSeries.Any())
+                    context.RemoveRange(serieEntity.GenerosSeries);
+
+                serieEntity.GenerosSeries = serie.GenerosSerie.Select(x => new GenerosSeries()
+                {
+                    IdGn = x
+                }).ToHashSet();
+
+                context.Update(serieEntity);
+
+                return await context.SaveChangesAsync() > 0;
             }
-
-            long maxAllowedContentLength = _configuration.GetValue<long>("RequestLimits:MaxAllowedContentLength");
-
-            string tempPortadaFileName = "";
-
-            if (serie.portadaFile != null)
+            catch (Exception ex)
             {
-                await ArchivosHelper.BorrarArchivo(serie.Portada, _seriesTemp);
-                tempPortadaFileName = await ArchivosHelper.GuardarArchivo(serie.portadaFile, _seriesTemp);
+                throw new Exception(ex.ToString());
+                return false;
             }
-
-            // Update serie properties
-            serieEntity.NombreSr = serie.Nombre;
-            serieEntity.DescripcionSr = serie.Descripcion;
-            serieEntity.CantCapitulosSr = serie.CantidadCapitulos;
-            serieEntity.UrlSr = serie.Url;
-            serieEntity.PortadaSr = tempPortadaFileName;
-
-            context.Series.Update(serieEntity);
-            return await context.SaveChangesAsync() > 0;
         }
 
         public async Task<FileStream> GetSerieFile(int idCap)

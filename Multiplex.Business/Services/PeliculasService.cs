@@ -134,42 +134,51 @@ namespace Multiplex.Business.Services
 
         public async Task<bool> UpdatePelicula(PeliculaDTO pelicula)
         {
-            var peliculaDb = await context.Peliculas
+            try
+            {
+                var peliculaDb = await context.Peliculas
                 .Include(x => x.GenerosPeliculas)
                 .Where(x => x.IdPl == pelicula.Id)
                 .FirstOrDefaultAsync();
 
-            if (peliculaDb == null)
+                if (peliculaDb == null)
+                    return false;
+
+                if (pelicula.file != null)
+                {
+                    await ArchivosHelper.BorrarArchivo(peliculaDb.UrlPl, _peliculasTemp);
+                    peliculaDb.UrlPl = await ArchivosHelper.GuardarArchivo(pelicula.file, _peliculasTemp);
+                }
+
+                if (pelicula.portadaFile != null)
+                {
+                    await ArchivosHelper.BorrarArchivo(peliculaDb.PortadaPl, _peliculasTemp);
+                    peliculaDb.PortadaPl = await ArchivosHelper.GuardarArchivo(pelicula.portadaFile, _peliculasTemp);
+                }
+                // Update other properties
+                peliculaDb.TituloPl = pelicula.Titulo;
+                peliculaDb.DescripcionPl = pelicula.Descripcion;
+                peliculaDb.DuracionPl = pelicula.Duracion;
+                peliculaDb.ElencoPl = pelicula.Elenco;
+
+                // Remove and add related genres
+                if (peliculaDb.GenerosPeliculas.Any())
+                    context.RemoveRange(peliculaDb.GenerosPeliculas);
+                peliculaDb.GenerosPeliculas = pelicula.GenerosList.Select(x => new GenerosPeliculas()
+                {
+                    IdGn = x
+                }).ToHashSet();
+
+                context.Update(peliculaDb);
+
+                return await context.SaveChangesAsync() > 0;
+
+            }catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
                 return false;
-
-            if (pelicula.file != null)
-            {
-                await ArchivosHelper.BorrarArchivo(peliculaDb.UrlPl, _peliculasTemp);
-                peliculaDb.UrlPl = await ArchivosHelper.GuardarArchivo(pelicula.file, _peliculasTemp);
             }
-
-            if (pelicula.portadaFile != null)
-            {
-                await ArchivosHelper.BorrarArchivo(peliculaDb.PortadaPl, _peliculasTemp);
-                peliculaDb.PortadaPl = await ArchivosHelper.GuardarArchivo(pelicula.portadaFile, _peliculasTemp);
-            }
-            // Update other properties
-            peliculaDb.TituloPl = pelicula.Titulo;
-            peliculaDb.DescripcionPl = pelicula.Descripcion;
-            peliculaDb.DuracionPl = pelicula.Duracion;
-            peliculaDb.ElencoPl = pelicula.Elenco;
-
-            // Remove and add related genres
-            if (peliculaDb.GenerosPeliculas.Any())
-                context.RemoveRange(peliculaDb.GenerosPeliculas);
-            peliculaDb.GenerosPeliculas = pelicula.GenerosList.Select(x => new GenerosPeliculas()
-            {
-                IdGn = x
-            }).ToHashSet();
-
-            context.Update(peliculaDb);
-
-            return await context.SaveChangesAsync() > 0;
+            
         }
 
         public async Task<List<PeliculaDTO>> GetPeliculasPorGenero(int generoId) =>
